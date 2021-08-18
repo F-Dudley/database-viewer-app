@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+
 import './App.scss';
+import AttributeEditor from './Components/AttributeEditor';
+import ListViewer from './Components/ListViewer';
+import Sidebar from './Components/Sidebar';
 
 const App = () => {
     return (
-        <>
-            <h1 className="test">I Work</h1>
-        </>
+        <div className="App">
+            <Sidebar />
+            <ListViewer />
+            <AttributeEditor />
+        </div>
     )
 }
 
