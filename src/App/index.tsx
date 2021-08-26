@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Route } from 'react-router-dom';
 
 import './App.scss';
 import AttributeEditor from './Components/AttributeEditor';
@@ -23,5 +22,5 @@ ReactDOM.render(
     <React.StrictMode>
         <App />
     </React.StrictMode>,
-    document.getElementById('root')
+    document.body
 );

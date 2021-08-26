@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import './ListViewer.scss';
 
@@ -6,11 +6,10 @@ interface ListViewerProps {
 
 }
 
-export default class ListViewer extends Component {
+export default class ListViewer extends React.Component {
 
     constructor(props: ListViewerProps) {
         super(props);
-        window
     }
 
     render() {

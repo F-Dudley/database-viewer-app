@@ -1,5 +1,4 @@
-import { Console, log } from 'console';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import isDev from 'electron-is-dev';
 import * as Path from 'path';
 
@@ -33,8 +32,11 @@ const createWindows = (): void => {
     resizable: false,
 
     webPreferences: {
+      allowRunningInsecureContent: false,
       nodeIntegration: false,
+      enableRemoteModule: false,      
       contextIsolation: true,
+      sandbox: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
 
@@ -55,12 +57,13 @@ const createWindows = (): void => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      enableRemoteModule: false,
+      worldSafeExecuteJavaScript: true,
       preload: SERVER_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
 
     title: "Database Viewer Application | Server Window",
     
-
   })
 
   // Load Webpacked Version of App.
@@ -109,3 +112,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+ipcMain.handle("TestChannel", async (event, request: number)=> {
+  return "Test Invoke Completed";
+});

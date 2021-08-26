@@ -31,5 +31,5 @@ ReactDOM.render(
     <React.StrictMode>
         <ServerApplication />
     </React.StrictMode>,
-    document.getElementById('root')
+    document.body
 );
