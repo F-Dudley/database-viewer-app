@@ -3,4 +3,53 @@
     flex: 1 1 65%;
 
     background-color: #2C3E50;
+
+    .Searchbar {
+        height: 5%;
+        width: 100%;
+        padding: 5px 0.5%;
+
+        display: flex;
+        align-items: center;
+
+        border-bottom: 1px solid black;
+
+        &-SearchContainer {
+            width: 100%;
+
+            background-color: transparent;
+            
+
+            input[type=text] {
+                width: 88% - 1%;
+
+                color: #2C3E50;
+                background-color: whitesmoke;
+                border: 2px transparent solid;
+                border-radius: 5px 0px 0px 5px;
+                
+                &:hover {
+                    background: lightgray;
+                }
+
+                &:focus {
+                    outline: none !important;
+                }
+            }
+
+            button {
+                width: 12% - 1%;
+                padding: 1px;
+
+                background-color: whitesmoke;
+                border: 2px transparent solid;
+                border-left: 1px black solid;
+                border-radius: 0 5px 5px 0;
+
+                &:hover {
+                    background: lightgray;
+                }
+            }
+        }
+    }
 }

@@ -1,3 +1,4 @@
+import { Console, log } from 'console';
 import { app, BrowserWindow } from 'electron';
 import isDev from 'electron-is-dev';
 import * as Path from 'path';
@@ -6,49 +7,88 @@ import * as Path from 'path';
 // plugin that tells the Electron app where to look for the Webpack-bundled app code (depending on
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+
+declare const SERVER_WINDOW_WEBPACK_ENTRY: string;
+declare const SERVER_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
 
-const createWindow = (): void => {
-  // Create the browser window.
+const createWindows = (): void => {
+
   const mainWindow = new BrowserWindow({
+
     width: 1280,    
     height: 720,
     show: false,
 
+    minWidth: 800,
+    minHeight: 600,
+
     fullscreen: false,
+    fullscreenable: false,
     resizable: false,
 
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: false,
-      enableRemoteModule: false,
-      preload: Path.join(app.getAppPath(), 'preload.ts'),
+      contextIsolation: true,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
 
+    title: "Database Viewer Application | Main Window",
+    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  const serverWindow = new BrowserWindow({
 
+    width: 500,
+    height: 720,
+    show: false,
+
+    fullscreen: false,
+    fullscreenable: false,
+    resizable: false,
+
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: SERVER_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    },
+
+    title: "Database Viewer Application | Server Window",
+    
+
+  })
+
+  // Load Webpacked Version of App.
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  serverWindow.loadURL(SERVER_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
 
-  // Open the DevTools.
+  mainWindow.on("close", () => {
+    if(!serverWindow.isDestroyed()){
+      serverWindow.close();
+    }
+  });
+
   if(isDev) {
-    mainWindow.webContents.openDevTools();    
+    mainWindow.webContents.openDevTools();
+    serverWindow.show();
+    serverWindow.webContents.openDevTools();
   }
+
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', createWindows);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -63,7 +103,7 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createWindows();
   }
 });
 

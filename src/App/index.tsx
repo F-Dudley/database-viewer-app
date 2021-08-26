@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import { Route } from 'react-router-dom';
 
 import './App.scss';
 import AttributeEditor from './Components/AttributeEditor';
@@ -11,9 +13,15 @@ const App = () => {
             <Sidebar />
             <ListViewer />
             <AttributeEditor />
-        </div>
+        </div>                      
     )
 }
 
 export default App
 
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+);

@@ -1,8 +1,38 @@
 .Sidebar {
 
     flex: 0 1 8%;
-    max-width: 13ch;
+    max-width: 10ch;
+    height: 100vh;
     
     border-right: 1px solid black;
     background-color: #34495E;
+
+
+
+    &-List {
+
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        align-items: center;
+
+        &Item {
+            width: 100%;
+            text-decoration: none;
+
+            &-Link {
+                color: whitesmoke;
+                text-decoration: none;
+            }
+        }
+    }
+
+    &:last-child {
+        margin-top: auto;
+    }
 }

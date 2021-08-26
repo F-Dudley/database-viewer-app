@@ -51,9 +51,20 @@
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
                 {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
-                  "name": "main_window"
+                  "name": "main_window",
+                  "html": "./src/App/index.html",
+                  "js": "./src/App/renderer.ts",
+                  "preload": {
+                    "js": "./src/App/preload.ts"
+                  }
+                },
+                {
+                  "name": "server_window",                 
+                  "html": "./src/Server/index.html",
+                  "js": "./src/Server/renderer.ts",
+                  "preload": {
+                    "js": "./src/Server/preload.ts"
+                  }
                 }
               ]
             }
@@ -72,6 +83,7 @@
     "@types/node": "^16.6.1",
     "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.1.8",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.6.0",
@@ -81,6 +93,7 @@
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
+    "mysql": "^2.18.1",
     "node-loader": "^2.0.0",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.1.0",
@@ -91,6 +104,7 @@
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0"
   }
 }
