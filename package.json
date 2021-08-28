@@ -1,6 +1,6 @@
 {
   "name": "database-viewer-app",
-  "productName": "database-viewer-app",
+  "productName": "Database-Viewer",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -13,8 +13,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "F_Dudley4",
-    "email": "50776815+F-Dudley@users.noreply.github.com"
+    "name": "Finn Dudley",
+    "email": "finndudley4@gmail.com"
   },
   "license": "MIT",
   "config": {
@@ -51,17 +51,17 @@
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
                 {
-                  "name": "main_window",
                   "html": "./src/App/index.html",
                   "js": "./src/App/renderer.ts",
+                  "name": "main_window",
                   "preload": {
                     "js": "./src/App/preload.ts"
                   }
                 },
                 {
-                  "name": "server_window",                 
                   "html": "./src/Server/index.html",
                   "js": "./src/Server/renderer.ts",
+                  "name": "server_window",
                   "preload": {
                     "js": "./src/Server/preload.ts"
                   }
@@ -74,6 +74,8 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-react": "^7.14.5",
     "@electron-forge/cli": "^6.0.0-beta.59",
     "@electron-forge/maker-deb": "^6.0.0-beta.59",
     "@electron-forge/maker-rpm": "^6.0.0-beta.59",
@@ -87,6 +89,7 @@
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.6.0",
+    "babel-loader": "^8.2.2",
     "css-loader": "^6.0.0",
     "electron": "13.1.9",
     "electron-is-dev": "^2.0.0",
@@ -104,7 +107,6 @@
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0"
+    "react-dom": "^17.0.2"
   }
 }

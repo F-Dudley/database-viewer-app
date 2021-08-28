@@ -8,7 +8,7 @@ function Sidebar() {
         <div className="Sidebar">
             <ul className="Sidebar-List">
                 <li className="Sidebar-ListItem">
-                    <a href="" className="Sidebar-ListItem-Link">
+                    <a className="Sidebar-ListItem-Link">
                         Settings
                     </a>
                 </li>

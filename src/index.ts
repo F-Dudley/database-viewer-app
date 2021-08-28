@@ -32,11 +32,9 @@ const createWindows = (): void => {
     resizable: false,
 
     webPreferences: {
-      allowRunningInsecureContent: false,
-      nodeIntegration: false,
-      enableRemoteModule: false,      
+      allowRunningInsecureContent: false,   
       contextIsolation: true,
-      sandbox: true,
+      sandbox: true,      
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
 
@@ -55,15 +53,14 @@ const createWindows = (): void => {
     resizable: false,
 
     webPreferences: {
-      nodeIntegration: false,
+      allowRunningInsecureContent: false,    
       contextIsolation: true,
-      enableRemoteModule: false,
-      worldSafeExecuteJavaScript: true,
-      preload: SERVER_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      sandbox: true,      
+      preload: SERVER_WINDOW_PRELOAD_WEBPACK_ENTRY,      
     },
 
     title: "Database Viewer Application | Server Window",
-    
+    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
   })
 
   // Load Webpacked Version of App.
@@ -72,6 +69,14 @@ const createWindows = (): void => {
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
+    if(isDev) mainWindow.webContents.openDevTools();
+  });
+
+  serverWindow.once("ready-to-show", () => {
+      if(isDev) {
+        serverWindow.show();
+        serverWindow.webContents.openDevTools();      
+      }
   });
 
   mainWindow.on("close", () => {
@@ -80,12 +85,9 @@ const createWindows = (): void => {
     }
   });
 
-  if(isDev) {
-    mainWindow.webContents.openDevTools();
-    serverWindow.show();
-    serverWindow.webContents.openDevTools();
-  }
+  serverWindow.on("close", () => {
 
+  });
 };
 
 // This method will be called when Electron has finished
@@ -113,6 +115,6 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-ipcMain.handle("TestChannel", async (event, request: number)=> {
-  return "Test Invoke Completed";
+ipcMain.on("Ping", () => {
+  console.log("Pong");
 });

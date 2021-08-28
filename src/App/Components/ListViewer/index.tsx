@@ -12,6 +12,10 @@ export default class ListViewer extends React.Component {
         super(props);
     }
 
+    TestFunc() {
+        window.apis.databaseAPI.send("Ping", {});
+    }
+
     render() {
         return (
             <div className="ListViewer">
@@ -19,7 +23,7 @@ export default class ListViewer extends React.Component {
 
                     <div className="Searchbar-SearchContainer">
                         <input type="text" placeholder="Search..." name="search" />
-                        <button type="submit">Search</button>
+                        <button type="submit" onClick={this.TestFunc}>Search</button>
                     </div>
 
                 </div>

@@ -6,6 +6,5 @@ enum RequestType {
 }
 
 interface InvokeRequest{
-    Request: RequestType;
 
 }
