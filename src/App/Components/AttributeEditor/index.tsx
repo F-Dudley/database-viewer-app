@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch, NavLink } from 'react-router-dom';
 
 import './AttributeEditor.scss';
 import { CarRegistryInterface } from '../../../interfaces/DatabaseInterfaces';
@@ -64,12 +64,12 @@ export default class AttributeEditor extends Component {
                 <Router>
                     <div className="Tabs">
                         <div className="Tabs-Buttons">
-                            <Link to="/Vehicle_Details">Vehicle Details</Link>
-                            <Link to="/Engine_Details">Engine Details</Link>
-                            <Link to="/RUM_Data">RUM Details</Link>
-                            <Link to="/History">History</Link>
-                            <Link to="/Documentation">Documentation</Link>
-                            <Link to="/Images">Images</Link>
+                            <NavLink to="/Vehicle_Details" activeClassName="Tabs-ActiveButton">Vehicle Details</NavLink>
+                            <NavLink to="/Engine_Details" activeClassName="Tabs-ActiveButton">Engine Details</NavLink>
+                            <NavLink to="/RUM_Data" activeClassName="Tabs-ActiveButton">RUM Details</NavLink>
+                            <NavLink to="/History" activeClassName="Tabs-ActiveButton">History</NavLink>
+                            <NavLink to="/Documentation" activeClassName="Tabs-ActiveButton">Documentation</NavLink>
+                            <NavLink to="/Images" activeClassName="Tabs-ActiveButton">Images</NavLink>
                         </div>
 
                         <Switch>
@@ -78,63 +78,63 @@ export default class AttributeEditor extends Component {
                                     <table>
                                         <tr>
                                             <td>
-                                                <label htmlFor="">
-                                                    Reg No: <input type="text" />
+                                                <label htmlFor="RegNoInput">
+                                                    Reg No: <input type="text" id="RegNoInput" value={'test'}/>
                                                 </label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label htmlFor="">
-                                                    Manufactured Date: <input type="date" id="" value={'2000-12-04'}/>
+                                                <label htmlFor="ManufDateInput">
+                                                    Manufactured Date: <input type="date" id="ManufDateInput" value={'2000-12-04'}/>
                                                 </label>
                                             </td>
                                             <td>
-                                                <label htmlFor="">
-                                                    Chassis No: <input type="text" id="" value={'test'} />
+                                                <label htmlFor="ChassisNoInput">
+                                                    Chassis No: <input type="text" id="ChassisNoInput" value={'test'} />
                                                 </label>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>                                            
-                                                <label htmlFor="">
-                                                    1st Reg DVLC <input type="date" id="" value={'1962-10-17'} />
+                                        <tr>                                                    
+                                            <td>                                                         
+                                                <label htmlFor="1stRegDVLCInput">
+                                                    1st Reg DVLC <input type="date" id="1stRegDVLCInput" value={'1962-10-17'} />
                                                 </label>
                                             </td>
                                             <td>
-                                                <label htmlFor="">
-                                                    Colour: <input type="text" id="" value={'BLUE/WHITE'}/>
+                                                <label htmlFor="ColourInput">
+                                                    Colour: <input type="text" id="ColourInput" value={'BLUE/WHITE'}/>
                                                 </label>                                                
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label htmlFor="">
-                                                    Seats: <input type="number" id="" value={2+2} />
+                                                <label htmlFor="SeatsInput">
+                                                    Seats: <input type="number" id="SeatsInput" value={2+2} />
                                                 </label>
                                             </td>
                                             <td>
-                                                <label htmlFor="">
-                                                    Wheels: <input type="number" id="" value={4} />
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label htmlFor="">
-                                                    MOT: <input type="text" id="" value={''} />
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <label htmlFor="">
-                                                    Drive: <input type="text" id="" value={''} />
+                                                <label htmlFor="WheelsInput">
+                                                    Wheels: <input type="number" id="WheelsInput" value={4} />
                                                 </label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label htmlFor="">
-                                                    Condition: <input type="text" id="" value={''}/>
+                                                <label htmlFor="MOTInput">
+                                                    MOT: <input type="text" id="MOTInput" value={''} />
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label htmlFor="DriveInput">
+                                                    Drive: <input type="text" id="DriveInput" value={''} />
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label htmlFor="ConditionInput">
+                                                    Condition: <input type="text" id="ConditionInput" value={''}/>
                                                 </label>                                                
                                             </td>
                                         </tr>

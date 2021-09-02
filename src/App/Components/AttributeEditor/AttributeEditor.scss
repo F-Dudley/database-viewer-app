@@ -39,7 +39,7 @@
             display: flex;            
             flex-wrap: nowrap;
 
-            & > a {
+            & > * {
                 flex: 0 1 15ch;
                 overflow-x: hidden;
                 padding: 0 0.5%;
@@ -51,11 +51,12 @@
                 &:hover {
                     background-color: lightgray;
                 }
-
-                &:active {
-                    background-color: lightgray;
-                }
             }
+        }
+
+        &-ActiveButton {
+            color: white;
+            background-color: gray;
         }
 
         .TableAlign {
