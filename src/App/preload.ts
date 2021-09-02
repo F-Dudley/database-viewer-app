@@ -1,18 +1,19 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-import './app-interfaces.ts';
+import * as Interfaces from '../interfaces/DatabaseInterfaces';
 
 declare global {
-    interface Window {apis: APIRoutes,}
+    interface Window {api: APIRoutes,}
 }
 
-window.apis = window.apis;
+window.api = window.api;
+let SettingsConfig: any;
 
 interface APIRoutes {
     databaseAPI: {
         send: (channel: string, data: any) => void,
         receive: (channel: string, func: any) => void,
-        invoke: (channel: string, request: InvokeRequest) => any,        
+        invoke: (channel: string, request: InvokeRequest) => Promise<any>,
     }
 };
 
@@ -35,15 +36,13 @@ let apis: APIRoutes = {
             
         invoke: async (channel, request) => {
             if(validChannels.includes(channel)) {
-                ipcRenderer.invoke(channel, request)
-                .then((result) => {
-                    console.log(result);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+                let result = await ipcRenderer.invoke(channel, request);
+                
+                return result;
             }
-        },  
+        },
+        
+        
     }
 };
 
@@ -51,4 +50,6 @@ const validChannels: string[] = [
     "Ping",
 ];
 
-contextBridge.exposeInMainWorld("apis", apis);
+contextBridge.exposeInMainWorld("api", apis);
+
+// ----- //

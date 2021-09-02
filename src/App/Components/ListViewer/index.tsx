@@ -1,5 +1,8 @@
+import { string } from 'prop-types';
 import React from 'react';
+import { CarRegistryInterface } from '../../../interfaces/DatabaseInterfaces';
 
+import '../../../interfaces/DatabaseInterfaces.ts';
 import './ListViewer.scss';
 
 interface ListViewerProps {
@@ -10,10 +13,14 @@ export default class ListViewer extends React.Component {
 
     constructor(props: ListViewerProps) {
         super(props);
+
+        this.state = {
+            DataEntries: [],
+        }
     }
 
     TestFunc() {
-        window.apis.databaseAPI.send("Ping", {});
+        window.api.databaseAPI.send("Ping", {});
     }
 
     render() {
