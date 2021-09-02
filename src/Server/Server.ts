@@ -1,5 +1,8 @@
 import * as fs from 'fs';
+import { MysqlError } from 'mysql';
 const mysql = require('mysql');
+
+import { QueryRequest } from '../interfaces/DataParameterInterfaces';
 
 interface ConnectionRequirements {
     host: string,
@@ -41,8 +44,22 @@ export default class MySQLServer {
         this.connection.end();
     }
 
-    public requestListData() {
-        
+    public async requestListData(queryRequest: QueryRequest) {
+        let sql = 'SELECT * from';
+        if(queryRequest.DescendOrder) sql += 'DESC';
+
+        this.connection.query(sql, async (error: MysqlError, results: any) => {
+            if(error) {
+                console.log(error);
+                throw error;
+            } 
+            else {
+                console.log('Queried Data is:')
+                console.log(results);
+
+                return results;
+            }
+        });
     }
 
 }

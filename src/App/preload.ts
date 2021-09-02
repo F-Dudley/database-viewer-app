@@ -48,6 +48,7 @@ let apis: APIRoutes = {
 
 const validChannels: string[] = [
     "Ping",
+    "RequestDataList",
 ];
 
 contextBridge.exposeInMainWorld("api", apis);
