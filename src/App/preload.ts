@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-import * as Interfaces from '../interfaces/DatabaseInterfaces';
+
+import { QueryRequest, InsertRequest } from '../interfaces/DataParameterInterfaces';
 
 declare global {
     interface Window {api: APIRoutes,}
@@ -11,44 +12,48 @@ let SettingsConfig: any;
 
 interface APIRoutes {
     databaseAPI: {
-        send: (channel: string, data: any) => void,
-        receive: (channel: string, func: any) => void,
-        invoke: (channel: string, request: InvokeRequest) => Promise<any>,
+        send: (channel: string, data: QueryRequest | InsertRequest) => void,
+        receive: (channel: string, func: (data: Array<any> | null) => void) => void,
+        receiveOnce: (channel: string, func: (data: Array<any> | null) => void) => void,
     }
 };
 
 let apis: APIRoutes = {
     databaseAPI: {
 
-        send: (channel, data) => {
+        send: (channel, dataRequest) => {
             if(validChannels.includes(channel)){
-                ipcRenderer.send(channel, data);
+                ipcRenderer.send(channel, dataRequest);
             }
-            else return "Channel Not Found.";
+            else {
+                console.log("Channel Not Found.");
+                return null;
+            }
         },
 
-        receive: (channel, func) => {
-            if(validChannels.includes(channel)) {
-                ipcRenderer.on(channel, (sender, data) => func(sender, data));
-            }
-            else return "Channel Not Found.";
-        },
-            
-        invoke: async (channel, request) => {
-            if(validChannels.includes(channel)) {
-                let result = await ipcRenderer.invoke(channel, request);
-                
-                return result;
+        receive: (channel, callback) => {
+            if (validChannels.includes(channel)) {
+                const newCallback = (_: null, data: any[]) => callback(data);
+                ipcRenderer.on(channel, newCallback);
             }
         },
-        
-        
+
+        receiveOnce: (channel, callback) => {
+            if (validChannels.includes(channel)) {
+                const newCallback = (_: null, data: any[]) => callback(data);
+                ipcRenderer.once(channel, newCallback);
+            }
+        },
+
     }
 };
 
 const validChannels: string[] = [
     "Ping",
     "RequestDataList",
+    "RequestAttributeEdit",
+    "AppendAttributeEdit",
+    "InsertNewData"
 ];
 
 contextBridge.exposeInMainWorld("api", apis);

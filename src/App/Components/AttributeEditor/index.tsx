@@ -14,19 +14,13 @@ export default class AttributeEditor extends Component {
         super(props);
 
         this.state = {
-            count: 0,
-            entryData: {},
-            dataTest: 'This Works',
+
         }
 
     }
 
     private handleSubmit() {
-
-    }
-
-    private testButton() {
-        console.log()
+        
     }
 
     render() {

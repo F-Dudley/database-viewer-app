@@ -1,10 +1,8 @@
 import { ipcRenderer } from 'electron';
-import MySQLServer from './Server';
+
 import { QueryRequest } from '../interfaces/DataParameterInterfaces';
 
-const server = new MySQLServer();
-
 ipcRenderer.on("RequestData", async (event, dataParams: QueryRequest) => {
-    let requestedQuery = await server.requestListData(dataParams)
+    let requestedQuery = false;
     event.sender.send("RequestDataList-Response", requestedQuery);
 });

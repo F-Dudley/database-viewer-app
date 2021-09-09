@@ -3,7 +3,7 @@ import React from 'react';
 import './Sidebar.scss';
 
 
-function Sidebar() {
+const Sidebar = () => {
     return (
         <div className="Sidebar">
             <ul className="Sidebar-List">

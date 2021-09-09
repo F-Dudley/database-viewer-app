@@ -1,40 +1,48 @@
-import { string } from 'prop-types';
-import React from 'react';
-import { CarRegistryInterface } from '../../../interfaces/DatabaseInterfaces';
+import React, { FC, useState, useEffect} from 'react';
 
-import '../../../interfaces/DatabaseInterfaces.ts';
 import './ListViewer.scss';
 
-interface ListViewerProps {
+const ListViewer: FC = () => {
 
-}
-
-export default class ListViewer extends React.Component {
-
-    constructor(props: ListViewerProps) {
-        super(props);
-
-        this.state = {
-            DataEntries: [],
+    const [search, setSearch] = useState<string>("");
+    const [searchResults, setSearchResults] = useState<Array<any>>([]);
+    
+    useEffect(() => {
+        if (search == "" || search == null) {
+            setSearch("*");
         }
-    }
 
-    TestFunc() {
-        window.api.databaseAPI.send("Ping", {});
-    }
+        let typingDelay = setTimeout(() => {
 
-    render() {
-        return (
-            <div className="ListViewer">
-                <div className="Searchbar">
+            window.api.databaseAPI.send("RequestDataList", 
+            {
+                database: 'register_of_cars',
+                searchRequest: search,
+                DescendOrder: false,
+            });
+            window.api.databaseAPI.receiveOnce("RequestDataList", (data: Array<any>) => {
+                setSearchResults(data);
+                console.log(data[0]);
+            });
+        }, 400);
 
-                    <div className="Searchbar-SearchContainer">
-                        <input type="text" placeholder="Search..." name="search" />
-                        <button type="submit" onClick={this.TestFunc}>Search</button>
-                    </div>
+        return () => clearTimeout(typingDelay)
+    }, [search])
 
+    return (
+        <div className="ListViewer">
+            <div className="Searchbar">
+
+                <div className="Searchbar-SearchContainer">
+                    <input type="text" autoComplete='off' placeholder="Search Here" name="search" onChange={e => setSearch(e.target.value)} />
+                    <button type="submit" >Search</button>
                 </div>
+
             </div>
-        )
-    }
+
+            {JSON.stringify(searchResults[0])}
+        </div>
+    )
 }
+
+export default ListViewer
