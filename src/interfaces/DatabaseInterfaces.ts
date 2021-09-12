@@ -1,35 +1,34 @@
+type Bit = 0 | 1;
+
 // ----
 // Owners Types and Interfaces
 
-interface Name {
-    First_Name: string;
-    Last_Name?: string;
-}
+export interface IOwner {
 
-interface Address {
+    ID: number;
+    Name: string;
+    Surname?: string;
+    Organisation?: string;
+    Job_Title?: string;
     Address_First: string;
     Address_Second?: string;
     Town: string;
+    County: string;
+    Post_Code: string;
     Country: string;
-
-}
-
-export interface OwnersInterface {
-    Organisation?: string;
-    Job_Title?: string;
-    Name: Name;
-    Address: Address;
+    Email?: string;    
     Telephone: bigint;
-    Email?: string;
+    Notes: string;
 
     Registered: Date;
+    Last_Updated: Date;
+    Active: Bit;
 }
 
 // ----
 // Car Registry Types and Interface
 
 type DriveType = 'L' | 'C' | 'R';
-type ConditionType = 'Original' | 'Good' | 'Bad' |'Restored' | 'UnRestored' | 'Undriveable' | 'To Be Restored / Being Restored';
 
 interface CarEngine {
     Engine_Make: string;
@@ -38,33 +37,39 @@ interface CarEngine {
     Engine_Rating: number;
 }
 
-export interface CarRegistryInterface {
+export interface ICarRegistry {
 
-    RUM_No: bigint;
+    ID: number;
     Make: string;
-    Invalid_Carriage: boolean;
-    REG_No: string;
+    Model: string;
+    Invalid_Carriage: number;
+    Reg_No: string;
     Chassis_No: string;
-    Manufactured: bigint;
+    Manufactured: number;
     First_Reg_DVLC: Date;
     First_Reg_RUM: Date;
     Colour: string;
     Drive: DriveType;
-    Wheels: bigint;
-    Seats: number;
-    Engine: CarEngine;
-    Condition: ConditionType;    
+    Wheels: number;
+    Seats: number | string;
+    Engine_Make: string;
+    Engine_Type: string;
+    Engine_No: string;
+    Engine_Rating: number;    
+    Condition: string;  
 
     Owner_ID: number;
-    CurrentOwners: string[];
+    Current_Owner: string;
+    Current_Owner2: string;
     OwnerChange: Date;
-    PreviousOwners: string[];
+    Previous_Owners: string;
 
     History: string;
     MOT: Date;
     Documentation: string;
-    Photos: boolean;
+    Photo: number;
 
     LastUpdated: Date;
-    Scraped: boolean;
+    Scraped: Bit;
+    Deleted: Bit;
 }

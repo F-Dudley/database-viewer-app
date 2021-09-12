@@ -2,6 +2,8 @@ import { throws } from 'assert';
 import * as fs from 'fs';
 import { resolve } from 'path/posix';
 import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest } from './interfaces/DataParameterInterfaces';
+import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
+import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
 interface ConnectionRequirements {
     host: string,
@@ -25,7 +27,7 @@ export default class MySQLConnection {
 
         this.connection = mysql.createConnection({
             host: 'localhost',
-            port: '3306',
+            port: '3307',
             user: 'root',
             password: 'password',
             database: 'rum_data'
@@ -64,47 +66,47 @@ export default class MySQLConnection {
         });
     }
 
-    public RequestQueryList(request: QueryRequest): Promise<Array<any> | Error> {
+    public RequestQueryList(request: QueryRequest): Promise<Array<ICarRegResult | IOwnerResult> | Error> {
         return new Promise( (resolve, reject) => {
             let columnTypes: string;
             let columnValues: string;
 
-            let escapedUserData = `'%${this.connection.escape(request.searchRequest)}%'`;
+            let escapedUserData = this.connection.escape(`%${request.searchRequest}%`);
             if(request.database == 'register_of_cars') {
-                columnTypes = "`ID`, `Make`, `Model`, `Reg No`, `Chassis No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine Make`, `Engine Type`, `Engine No`, `Engine Rating (cc)`, `Current Owner`, `Current Owner2`, `Condition`, `MOT`";
+                columnTypes = "`ID`, `Make`, `Model`, `Reg_No`, `Chassis_No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine_Make`, `Engine_Type`, `Engine_No`, `Engine_Rating`, `Current_Owner`, `Current_Owner`, `Condition`, `MOT`";
                 columnValues = `\`ID\` LIKE ${escapedUserData} 
                                 OR \`Make\` LIKE ${escapedUserData} 
-                                OR \`Model\` LIKE ${escapedUserData}
-                                OR \`Reg No\` LIKE ${escapedUserData}
-                                OR \`Chassis No\` LIKE ${escapedUserData}
-                                OR \`Manufactured\` LIKE ${escapedUserData}
+                                OR \`Model\` LIKE ${escapedUserData} 
+                                OR \`Reg_No\` LIKE ${escapedUserData} 
+                                OR \`Chassis_No\` LIKE ${escapedUserData} 
+                                OR \`Manufactured\` LIKE ${escapedUserData} 
                                 OR \`Colour\` LIKE ${escapedUserData}
-                                OR \`Drive\` LIKE ${escapedUserData}
+                                OR \`Drive\` LIKE ${escapedUserData} 
                                 OR \`Wheels\` LIKE ${escapedUserData}
-                                OR \`Seats\` LIKE ${escapedUserData}
-                                OR \`Engine Make\` LIKE ${escapedUserData}
-                                OR \`Engine Type\` LIKE ${escapedUserData}
-                                OR \`Engine No\` LIKE ${escapedUserData}
-                                OR \`Engine Rating (cc)\` LIKE ${escapedUserData}
-                                OR \`Current Owner\` LIKE ${escapedUserData}
-                                OR \`Current Owner2\` LIKE ${escapedUserData}
+                                OR \`Seats\` LIKE ${escapedUserData} 
+                                OR \`Engine_Make\` LIKE ${escapedUserData}
+                                OR \`Engine_Type\` LIKE ${escapedUserData} 
+                                OR \`Engine_No\` LIKE ${escapedUserData} 
+                                OR \`Engine_Rating\` LIKE ${escapedUserData}
+                                OR \`Current_Owner\` LIKE ${escapedUserData} 
+                                OR \`Current_Owner2\` LIKE ${escapedUserData} 
                                 OR \`Condition\` LIKE ${escapedUserData}
                                 OR \`MOT\` LIKE ${escapedUserData}`;
             }
             else {
-                columnTypes = "`ID`, `Christian Name`, `Surname`, `Organisation`, `Job Title`, `Address 1`, `Address 2`, `Town`, `County`, `Post Code`, `Country`, `email`";
+                columnTypes = "`ID`, `Name`, `Surname`, `Organisation`, `Job_Title`, `Address_First`, `Address_Second`, `Town`, `County`, `Post_Code`, `Country`, `Email`";
                 columnValues = `\`ID\` LIKE ${escapedUserData}
-                                OR \`Christian Name\` LIKE ${escapedUserData}
+                                OR \`Name\` LIKE ${escapedUserData}
                                 OR \`Surname\` LIKE ${escapedUserData}
                                 OR \`Organisation\` LIKE ${escapedUserData}
-                                OR \`Job Title\` LIKE ${escapedUserData}
-                                OR \`Address 1\` LIKE ${escapedUserData}
-                                OR \`Address 2\` LIKE ${escapedUserData}
+                                OR \`Job_Title\` LIKE ${escapedUserData}
+                                OR \`Address_First\` LIKE ${escapedUserData}
+                                OR \`Address_Second\` LIKE ${escapedUserData}
                                 OR \`Town\` LIKE ${escapedUserData}
                                 OR \`County\` LIKE ${escapedUserData}
-                                OR \`Post Code\` LIKE ${escapedUserData}
+                                OR \`Post_Code\` LIKE ${escapedUserData}
                                 OR \`Country\` LIKE ${escapedUserData}
-                                OR \`email\` LIKE ${escapedUserData}`;
+                                OR \`Email\` LIKE ${escapedUserData}`;
             }
 
             this.connection.query(
@@ -124,10 +126,10 @@ export default class MySQLConnection {
         });
     }
 
-    public RequestAttributeData(request: AttributeRequest): Promise<Array<any> | Error> {
+    public RequestAttributeData(request: AttributeRequest): Promise<Array<IOwner | ICarRegistry> | Error> {
         return new Promise( (resolve, reject) => {
             this.connection.query(
-                `SELECT * FROM ${request.database} WHERE 'ID' = ?;`,
+                `SELECT * FROM \`${request.database}\` WHERE 'ID' = ?;`,
                 [request.attributeID],
                 (err: any, rows: []) => {
                     if(err) {

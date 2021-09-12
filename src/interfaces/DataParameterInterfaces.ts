@@ -1,22 +1,22 @@
 
-type Database = 'register_of_cars' | 'owners'
+import { DatabaseType } from './ClientDatabaseInterfaces';
 
 export interface QueryRequest {
-    database: Database,
+    database: DatabaseType,
     searchRequest: string,
     DescendOrder?: boolean;
 }
 
 export interface AttributeRequest {
-    database: Database,
+    database: DatabaseType,
     attributeID: number,
 }
 
 export interface UpdateRequest {
-    database: Database,
+    database: DatabaseType,
     idValue: number
 }
 
 export interface InsertRequest {
-    database: Database,
+    database: DatabaseType,
 }

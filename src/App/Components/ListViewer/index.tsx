@@ -1,46 +1,59 @@
 import React, { FC, useState, useEffect} from 'react';
 
-import './ListViewer.scss';
+import { DatabaseType, ICarRegResult, IOwnerResult } from '../../../interfaces/ClientDatabaseInterfaces';
+import QuerySearchResult from './QuerySearchResult';
 
-const ListViewer: FC = () => {
+import './ListViewer.scss';
+import { IOwner } from '../../../interfaces/DatabaseInterfaces';
+
+interface ListViewerProps {
+    database: DatabaseType
+}
+
+const ListViewer: FC<ListViewerProps> = (props) => {
 
     const [search, setSearch] = useState<string>("");
-    const [searchResults, setSearchResults] = useState<Array<any>>([]);
-    
+    const [searchResults, setSearchResults] = useState<Array<ICarRegResult | IOwnerResult>>([]);
+
     useEffect(() => {
-        if (search == "" || search == null) {
-            setSearch("*");
-        }
+        setSearch("");
+    }, []);        
+
+    useEffect(() => {
 
         let typingDelay = setTimeout(() => {
 
             window.api.databaseAPI.send("RequestDataList", 
             {
-                database: 'register_of_cars',
+                database: props.database,
                 searchRequest: search,
                 DescendOrder: false,
             });
-            window.api.databaseAPI.receiveOnce("RequestDataList", (data: Array<any>) => {
+            window.api.databaseAPI.receiveOnce("RequestDataList", (data: Array<ICarRegResult | IOwnerResult>) => {
                 setSearchResults(data);
-                console.log(data[0]);
             });
         }, 400);
 
         return () => clearTimeout(typingDelay)
-    }, [search])
+    }, [search, props.database]);
 
     return (
         <div className="ListViewer">
             <div className="Searchbar">
 
                 <div className="Searchbar-SearchContainer">
-                    <input type="text" autoComplete='off' placeholder="Search Here" name="search" onChange={e => setSearch(e.target.value)} />
+                    <input type="text" autoComplete='off' placeholder="Search Here" name="search"  onChange={e => setSearch(e.target.value)} />
                     <button type="submit" >Search</button>
                 </div>
 
             </div>
-
-            {JSON.stringify(searchResults[0])}
+            <div className="SearchResults">
+                {
+                    searchResults.map((searchResult) => {
+                        return ( <QuerySearchResult key={searchResult.ID} database={props.database} result={searchResult}/> );
+                    })
+                }                
+            </div>
         </div>
     )
 }

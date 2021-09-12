@@ -1,7 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 
-import { QueryRequest, InsertRequest } from '../interfaces/DataParameterInterfaces';
+import { QueryRequest, AttributeRequest, InsertRequest,  UpdateRequest } from '../interfaces/DataParameterInterfaces';
+import { ICarRegistry, IOwner} from '../interfaces/DatabaseInterfaces';
+import { ICarRegResult, IOwnerResult } from '../interfaces/ClientDatabaseInterfaces';
 
 declare global {
     interface Window {api: APIRoutes,}
@@ -12,9 +14,9 @@ let SettingsConfig: any;
 
 interface APIRoutes {
     databaseAPI: {
-        send: (channel: string, data: QueryRequest | InsertRequest) => void,
-        receive: (channel: string, func: (data: Array<any> | null) => void) => void,
-        receiveOnce: (channel: string, func: (data: Array<any> | null) => void) => void,
+        send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest) => void,
+        receive: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | null) => void) => void,
+        receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | null) => void) => void,
     }
 };
 
@@ -36,12 +38,18 @@ let apis: APIRoutes = {
                 const newCallback = (_: null, data: any[]) => callback(data);
                 ipcRenderer.on(channel, newCallback);
             }
+            else {
+                console.log("Recieved Data From Invalid Channel")
+            }
         },
 
         receiveOnce: (channel, callback) => {
             if (validChannels.includes(channel)) {
                 const newCallback = (_: null, data: any[]) => callback(data);
                 ipcRenderer.once(channel, newCallback);
+            }
+            else {
+                console.log("Recieved Data From Invalid Channel")
             }
         },
 

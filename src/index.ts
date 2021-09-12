@@ -141,7 +141,7 @@ ipcMain.on("RequestAttributeEdit", async (event, dataParams: AttributeRequest) =
   })
   .catch(error => {
     console.log(error);
-    event.sender.send("RequestAttributeEdit", []);
+    event.sender.send("RequestAttributeEdit", null);
   })
 })
 

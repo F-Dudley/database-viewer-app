@@ -7,10 +7,7 @@
     border-right: 1px solid black;
     background-color: #34495E;
 
-
-
-    &-List {
-
+    ul {
         height: 100%;
         width: 100%;
         padding: 0;
@@ -18,16 +15,47 @@
 
         display: flex;
         flex-direction: column;
+        align-content: center;
+
         list-style: none;
-        align-items: center;
 
-        &Item {
+        & > li {
             width: 100%;
-            text-decoration: none;
 
-            &-Link {
-                color: whitesmoke;
+            &:last-child {
+                margin-top: auto;
+
+                a.LinkButton {
+                    border-bottom: none;
+                    border-top: 1px solid black;
+                }
+            }
+
+            a.LinkButton {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                width: 100%;
+                height: 3rem;
+
+                filter: grayscale(100%);
+                transition: color, background-color 0.2s ease-in;
+                color: white;
+                font-size: 1rem;
                 text-decoration: none;
+
+                border-bottom: 1px solid black;
+
+                &:hover {
+                    filter: grayscale(80%);
+                    color: black;
+                    background-color: lightgray;
+                } 
+                
+                &-Active {
+                    background-color: gray;
+                }
             }
         }
     }
