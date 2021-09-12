@@ -6,18 +6,45 @@ import { IOwner } from '../../../interfaces/DatabaseInterfaces';
 import { IOwnerResult } from '../../../interfaces/ClientDatabaseInterfaces';
 
 const AttributeEditorOwners = () => {
+    let tempData: IOwner;
+    let date = new Date();
+    tempData = {
+        ID: 0,
+        Name: "",
+        Surname: "",
+        Organisation: "",
+        Job_Title: "",
+        Address_First: "",
+        Address_Second: "",
+        Town: "",
+        County: "",
+        Post_Code: "",
+        Country: "",
+        Email: "",
+        Telephone: "",
+        Notes: "",
+
+        Registered: date,
+        Last_Updated: date,
+        Active: 0
+    };
+
     const match = useRouteMatch();
-    const [attributes, setAttributes] = useState<IOwner>(null);
-    const [disabled, setDisabled] = useState<boolean>(true);
+    const [disabled, setDisabled] = useState<boolean>(true);    
+    const [attributes, setAttributes] = useState<IOwner>(tempData);
 
     useEffect(() => {
-        console.log("Connecting to Channel.");
+
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<IOwner> ) => {
-            console.log(data);
             setAttributes(data[0]);
         });        
 
-    }, []);
+    });
+
+    const checkDate = (date: Date) => {
+        if(date == null) return "";
+        else return date.toISOString().split('T')[0];
+    }
 
     return (
         <div className="AttributeEditor">
@@ -26,131 +53,106 @@ const AttributeEditorOwners = () => {
                     <tr>
                         <td>
                             <label htmlFor="RumNoInput">
-                                ID: <input id="RumNoInput" type="number" value={attributes.ID} disabled={disabled} />
+                                ID: <input id="RumNoInput" type="number" value={attributes.ID} disabled={true}/>
                             </label>                                
                          </td>
                         <td>
                             <label htmlFor="OwnerInput">
-                                Owner: <input type="text" value={''} disabled={disabled}/>
+                                Organisation: <input type="text" value={attributes.Organisation} disabled={disabled}/>
                             </label>                                  
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label htmlFor="ManufacturerInput">
-                                Manufacturer: <input id="ManufacturerInput" type="text" value={'MANUFACTURER HERE'} />
+                                Name: <input id="ManufacturerInput" type="text" value={attributes.Name} disabled={disabled}/>
                             </label>
                         </td>
                         <td>
-                            <label htmlFor="ModelInput">
-                                Model: <input type="text" id="ModelInput" value={'Car Model'}/>
-                            </label>    
+                            <input type="text" id="ModelInput" value={attributes.Surname} disabled={disabled}/>    
                         </td>
                     </tr>
                 </table>    
             </div>
 
-                <div className="Tabs">
-                    <div className="Tabs-Buttons">
-                        <NavLink to={`${match.url}/details`} activeClassName="Tabs-ActiveButton">Details</NavLink>
-                        <NavLink to={`${match.url}/cars`} activeClassName="Tabs-ActiveButton">Cars</NavLink>
-                        <NavLink to={`${match.url}/notes`} activeClassName="Tabs-ActiveButton">Notes</NavLink>
-                    </div>
-                        <Route exact path={`${match.url}`}>
-                            <Redirect to={`${match.url}/details`} />
-                        </Route>
-                        <Route exact path={`${match.url}/details`}>
-                            <div className="TableAlign">
-                                <table>
-                                     <tr>
-                                         <td>
-                                            <label htmlFor="OrganisationInput">
-                                                Organisation: <input type="text" id="OrganisationInput" value={'test'}/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label htmlFor="JobTitleInput">
-                                                Job Title <input type="string" id="JobTitleInput" value={'2000-12-04'}/>
-                                            </label>
-                                        </td>                                        
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label htmlFor="NameInput">
-                                                Name: <input type="text" id="NameInput" value={'test'} /> 
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="NameInput" value={'test'} />
-                                        </td>
-                                    </tr>
-                                    <tr>                                                    
-                                        <td>                                                         
-                                            <label htmlFor="AddressInput">
-                                                Address: <input type="text" id="AddressInput" value={'1962-10-17'} />
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="AddressInput" value={'BLUE/WHITE'}/>  
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>                                                         
-                                            <label htmlFor="TownInput">
-                                                Town: <input type="text" id="TownInput" value={'1962-10-17'} />
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label htmlFor="CountyInput">
-                                                County: <input type="text" id="CountyInput" value={'1962-10-17'} />
-                                            </label>                                            
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label htmlFor="PhoneInput">
-                                                Telephone: <input type="text" id="PhoneInput" value={'1962-10-17'} />
-                                            </label>                                            
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label htmlFor="EmailInput">
-                                                Email: <input type="email" id="EmailInput" value={''} />
-                                            </label>                                            
-                                        </td>
-                                    </tr>
-                                </table>                                    
-                            </div>
-                        </Route>
-                        <Route exact path={`${match.path}/cars`}>
-                            <div className="VerticalAlign">
-                                <label htmlFor="MakeInput">
-                                    Make: <input type="text" id="MakeInput" value={'Engine Make'}/>
-                                </label>
-                                <label htmlFor="TypeInput">
-                                    Type: <input type="text" id="TypeInput" value={'Engine Type'}/>
-                                </label>
-                                <label htmlFor="NumberInput">
-                                    Number: <input type="text" id="NumberInput" value={'Engine Number'} />
-                                </label>
-                                <label htmlFor="RatingInput">
-                                    Rating(cc) <input type="text" id="RatingInput" value={'Engine CC Rating'} />
-                                </label>
-                            </div>
-                        </Route>
-                        <Route exact path={`${match.path}/notes`}>
-                            <div className="VerticalAlign">
-                                <label htmlFor="">History: </label>
-                                <textarea id="HistoryInput" cols={50} rows={25} />                                    
-                            </div>
-                        </Route>
+            <div className="Tabs">
+                <div className="Tabs-Buttons">
+                    <NavLink to={`${match.url}/details`} activeClassName="Tabs-ActiveButton">Details</NavLink>
+                    <NavLink to={`${match.url}/cars`} activeClassName="Tabs-ActiveButton">Cars</NavLink>
+                    <NavLink to={`${match.url}/notes`} activeClassName="Tabs-ActiveButton">Notes</NavLink>
                 </div>
 
+                <Route exact path={`${match.url}`}>
+                    <Redirect to={`${match.url}/details`} />
+                </Route>
+                <Route exact path={`${match.url}/details`}>
+                    <div className="TableAlign">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label htmlFor="JobTitleInput">
+                                        Job Title <input type="string" id="JobTitleInput" value={attributes.Job_Title} disabled={disabled}/>
+                                    </label>
+                                </td>                                        
+                            </tr>
+                            <tr>                                                    
+                                <td>                                                         
+                                    <label htmlFor="AddressInput">
+                                        Address: <input type="text" id="AddressInput" value={attributes.Address_First} disabled={disabled}/>
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="AddressInput" value={attributes.Address_Second} disabled={disabled}/>  
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>                                                         
+                                    <label htmlFor="TownInput">
+                                        Town: <input type="text" id="TownInput" value={attributes.Town} disabled={disabled}/>
+                                    </label>
+                                    </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="CountyInput">
+                                        County: <input type="text" id="CountyInput" value={attributes.County} disabled={disabled}/>
+                                    </label>                                            
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="PhoneInput">
+                                        Telephone: <input type="text" id="PhoneInput" value={attributes.Telephone} disabled={disabled}/>
+                                    </label>                                            
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="EmailInput">
+                                        Email: <input type="email" id="EmailInput" value={attributes.Email} disabled={disabled}/>
+                                    </label>                                            
+                                </td>
+                            </tr>
+                        </table>                                    
+                    </div>
+                </Route>
+
+                <Route exact path={`${match.path}/cars`}>
+                    <div className="VerticalAlign">
+                        <div>
+                            {
+                                // Map Owners Cars
+                            }
+                        </div>
+                    </div>
+                </Route>
+                <Route exact path={`${match.path}/notes`}>
+                    <div className="VerticalAlign">
+                        <label htmlFor="">Notes: </label>
+                        <textarea id="HistoryInput" cols={50} rows={25} value={attributes.Notes} disabled={disabled}/>                                    
+                    </div>
+                </Route>
+            </div>
         </div>
     )
 }

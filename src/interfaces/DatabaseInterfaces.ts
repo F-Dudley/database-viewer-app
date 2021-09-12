@@ -17,7 +17,7 @@ export interface IOwner {
     Post_Code: string;
     Country: string;
     Email?: string;    
-    Telephone: bigint;
+    Telephone: string;
     Notes: string;
 
     Registered: Date;

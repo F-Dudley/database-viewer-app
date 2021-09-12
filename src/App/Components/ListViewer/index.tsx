@@ -31,6 +31,7 @@ const ListViewer: FC<ListViewerProps> = (props) => {
             });
             window.api.databaseAPI.receiveOnce("RequestDataList", (data: Array<ICarRegResult | IOwnerResult>) => {
                 setSearchResults(data);
+                console.log(data);
             });
         }, 400);
 

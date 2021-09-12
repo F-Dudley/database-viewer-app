@@ -25,8 +25,8 @@ const App = () => {
                         
                     </Route>
                     <Route path='*'>
-                        <h1>Test</h1>
-                    </Route>                  
+                        <Redirect to='/cars'/>
+                    </Route>             
                 </Switch>
             </Router>
         </div>                      

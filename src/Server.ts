@@ -129,7 +129,7 @@ export default class MySQLConnection {
     public RequestAttributeData(request: AttributeRequest): Promise<Array<IOwner | ICarRegistry> | Error> {
         return new Promise( (resolve, reject) => {
             this.connection.query(
-                `SELECT * FROM \`${request.database}\` WHERE 'ID' = ?;`,
+                `SELECT * FROM \`${request.database}\` WHERE \`ID\` = ?;`,
                 [request.attributeID],
                 (err: any, rows: []) => {
                     if(err) {
