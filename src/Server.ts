@@ -5,9 +5,9 @@ import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest } from './
 import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
-interface ConnectionRequirements {
+export interface ConnectionRequirements {
     host: string,
-    port?: string | '3306',
+    port: string | '3306',
     user: string,
     password: string,
     database: string
@@ -128,6 +128,7 @@ export default class MySQLConnection {
 
     public RequestAttributeData(request: AttributeRequest): Promise<Array<IOwner | ICarRegistry> | Error> {
         return new Promise( (resolve, reject) => {
+            if(request.database != null) {
             this.connection.query(
                 `SELECT * FROM \`${request.database}\` WHERE \`ID\` = ?;`,
                 [request.attributeID],
@@ -142,26 +143,77 @@ export default class MySQLConnection {
                         resolve(rows);
                     }
                 }
+            )                
+            }
+
+        });
+    }
+
+    public RequestAttributeCars(request: AttributeRequest): Promise<Array<ICarRegResult> | null> {
+        let columnTypes = "`ID`, `Make`, `Model`, `Reg_No`, `Chassis_No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine_Make`, `Engine_Type`, `Engine_No`, `Engine_Rating`, `Current_Owner`, `Current_Owner`, `Condition`, `MOT`";
+        return new Promise( (resolve, reject) => {
+            this.connection.query(
+                `SELECT ${columnTypes} FROM \`register_of_cars\` WHERE \`Owner_ID\` = ?`,
+                [request.attributeID],
+                (err: any, rows: []) => {
+                    if(err) {
+                        reject(err);
+                    }
+                    else if(rows.length === 0) {
+                        resolve(null);
+                    }
+                    else {
+                        resolve(rows);
+                    }
+                }
             )
         });
     }
 
     public AppendAttributeEdit(request: UpdateRequest): Promise<boolean | Error> {
-        let post = {};
         
         return new Promise( (resolve, reject) => {
             this.connection.query(
-                "UPDATE ? SET ? WHERE `ID` = ?",
-                [request.database, post, request.idValue],
+                `UPDATE \`${request.database}\` SET ? WHERE \`ID\` = '?'`,
+                [request.data, request.attributeID],
                 (err: any, result: any) => {
                     if(err) {
                         reject(err);
                     }
                     else if(result.affectedRows === 0) {
-                        reject(new Error(`No Rows Affected.\nCannot Find Row with ID: ${request.idValue}`))
+                        reject(new Error(`No Rows Affected.\nCannot Find Row with ID: ${request.attributeID}`))
                     }
                     else {
                         console.log(`Updated ${result.affectedRows} in ${request.database}`);
+                        resolve(true);
+                    }
+                }
+            )
+        })
+    }
+
+    public InsertNewEntry(request: InsertRequest): Promise<boolean | Error> {
+        const parsedKeys: string[] = [];
+        const parsedValues: any[] = [];
+
+        for(const [key, value] of Object.entries(request.data)) {
+            parsedKeys.push(key);
+            parsedValues.push(value);
+        }
+
+        return new Promise( (resolve, reject) => {
+            this.connection.query(
+                `INSERT INTO \`${request.database}\` ? VALUES ?;`,
+                [parsedKeys, parsedValues],
+                (error: any, result: any) => {
+                    if(error) {
+                        reject(error);
+                    }
+                    else if(result.affectedRows === 0) {
+                        reject(new Error(`No Data was Added to the Table: ${request.database}.`));
+                    }
+                    else {
+                        console.log(`Inserted ${result.affectedRows} in ${request.database}`);
                         resolve(true);
                     }
                 }

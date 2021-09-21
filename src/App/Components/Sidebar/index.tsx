@@ -10,23 +10,22 @@ const Sidebar = () => {
             <ul>
                 <li>
                     <NavLink to="/cars" className="LinkButton" activeClassName="LinkButton-Active">
-                        <a>
-                            Cars
-                        </a>
+                        Cars
                     </NavLink>
                 </li>
                 <li>
                     <NavLink to="/owners" className="LinkButton" activeClassName="LinkButton-Active">
-                        <a>
-                            Owners
-                        </a>
+                        Owners
                     </NavLink>                
-                </li>                  
+                </li>
+                <li>
+                    <NavLink to="/newentry" className="LinkButton" activeClassName="LinkButton-Active">
+                        Add Entry
+                    </NavLink>
+                </li>                
                 <li>
                     <NavLink to="/settings" className="LinkButton" activeClassName="LinkButton-Active">
-                        <a>
-                            Settings
-                        </a>                        
+                        Settings
                     </NavLink>                    
                 </li>
             </ul>

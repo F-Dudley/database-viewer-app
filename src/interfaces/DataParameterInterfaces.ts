@@ -14,9 +14,28 @@ export interface AttributeRequest {
 
 export interface UpdateRequest {
     database: DatabaseType,
-    idValue: number
+    attributeID: number,
+    data: any
 }
 
 export interface InsertRequest {
     database: DatabaseType,
+    data: any,
+}
+
+
+type DialogMessageType = "none" | "info" | "error" | "question" | "warning"
+
+export interface DialogMessageRequest {
+    title: string;
+    message: string;
+    type: DialogMessageType;
+    buttons?: string[];
+}
+
+export interface DialogOpenRequest {
+    title: string;
+    defaultPath?: string;
+    filters: any[];
+    properties: string[];
 }

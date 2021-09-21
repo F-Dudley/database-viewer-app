@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect} from 'react';
 
 import { DatabaseType, ICarRegResult, IOwnerResult } from '../../../interfaces/ClientDatabaseInterfaces';
-import QuerySearchResult from './QuerySearchResult';
+import QuerySearchResult from '../QuerySearchResult';
 
 import './ListViewer.scss';
 import { IOwner } from '../../../interfaces/DatabaseInterfaces';
@@ -31,12 +31,15 @@ const ListViewer: FC<ListViewerProps> = (props) => {
             });
             window.api.databaseAPI.receiveOnce("RequestDataList", (data: Array<ICarRegResult | IOwnerResult>) => {
                 setSearchResults(data);
-                console.log(data);
             });
         }, 400);
 
         return () => clearTimeout(typingDelay)
     }, [search, props.database]);
+
+    const searchField = () => {
+        setSearch(search);
+    }
 
     return (
         <div className="ListViewer">

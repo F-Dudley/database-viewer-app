@@ -1,103 +1,138 @@
-import React, { Component, FormEvent, useEffect, useState, useRef } from 'react';
+import React, { Component, FormEvent, useEffect, useState, useRef, SyntheticEvent } from 'react';
 import { Route, Switch, NavLink, useRouteMatch, Redirect } from 'react-router-dom';
 
 import './AttributeEditor.scss';
 import { ICarRegistry } from '../../../interfaces/DatabaseInterfaces';
+import { CheckValue, CheckDate, ConvertBit, ConvertImageBlob } from '../../Utils';
+
+let tempData: ICarRegistry;
+tempData = {
+    ID: 0,
+
+}
 
 const AttributeEditorCarReg = () => {
-    let tempData: ICarRegistry;
-    let date = new Date();
-
-    tempData = {
-        ID: 0,
-        Make: "",
-        Model: "",
-        Invalid_Carriage: 0,
-        Reg_No: "",
-        Chassis_No: "",
-        Manufactured: 0,
-        First_Reg_DVLC: date,
-        First_Reg_RUM: date,
-        Colour: "",
-        Drive: "C",
-        Wheels: 0,
-        Seats: "",
-        Engine_Make: "",
-        Engine_Type: "",
-        Engine_No: "",
-        Engine_Rating: 0,
-        Condition: "",
-
-        Owner_ID: 0,
-        Current_Owner: "",
-        Current_Owner2: "",
-        OwnerChange: date,
-        Previous_Owners: "",
-
-        History: "",
-        MOT: date,
-        Documentation: "",
-        Photo: 0,
-
-        LastUpdated: date,
-        Scraped: 0,
-        Deleted: 0
-    }
-
-    const isMounted = useRef<boolean>(true)
+    const isMounted = useRef<boolean>(true);
     const match = useRouteMatch();
+    const [disabled, setDisabled] = useState<boolean>(true);
     const [attributes, setAttributes] = useState<ICarRegistry>(tempData);
-    const [disabled, setdisabled] = useState<boolean>(true);
+    const [images, setImages] = useState<Array<string> | null>(null)
+    const form = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
-
+        
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<ICarRegistry> ) => {
-            setAttributes(data[0]);
-        });        
+            if(disabled && isMounted) {
+                let dataResult = data[0];
+                setAttributes(dataResult);           
+            }
+        });          
 
         return (): void => {
             isMounted.current = false;
         }
-        
+
     }, []);
 
-    const checkDate = (date: Date) => {
-        if(date == null) return "";
-        else return date.toISOString().split('T')[0];
-    };
+    useEffect(() => {
+        form.current.reset();
+
+        const newImages: Array<string> = [];
+
+        ConvertImageBlob(attributes.Image)
+        .then(imageURL => {
+            newImages.push(imageURL);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+        ConvertImageBlob(attributes.Image2)
+        .then(imageURL => {
+            newImages.push(imageURL);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+        setImages(newImages); 
+    }, [attributes])
 
     const enableEdit = () => {
-
+        setDisabled(false);
     };
 
-    const handleSubmit = (event: FormEvent) => {
+    const resetEdit = () => {
+        form.current.reset();
+    }
+
+    const cancelEdit = () => {
+        resetEdit();
+        setDisabled(true);
+    }
+
+    const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        
+        let target = event.currentTarget as HTMLFormElement;
+
+        let postData: { [key: string]: any } = {};
+
+        for (let i = 0; i < target.length; i++) {
+            const element = target[i] as HTMLInputElement;
+            
+            for(const [key, value] of Object.entries(attributes)) {
+                if(key == element.name) {
+                    if(element.type == 'checkbox') {
+
+                        element.checked
+                        ?
+                            postData[element.name] = 1
+                        :
+                            postData[element.name] = 0
+                    }                   
+                    else {
+                        if(element.value != '') {
+                            postData[element.name] = element.value;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(Object.keys(postData).length == 0) {
+            cancelEdit();
+            window.api.requestDialog("RequestDialogMessage", {title: "Attribute Edit Error", message: "No Changed were Found with the Submitted Data.", type: "error"});
+        }
+        else {
+            window.api.databaseAPI.send("AppendAttributeEdit", {database: 'register_of_cars', attributeID: attributes.ID, data: postData});
+            setDisabled(true);
+            window.api.databaseAPI.send("RequestAttributeEdit", {database: 'register_of_cars', attributeID: attributes.ID});
+        }
     };
 
     return (
         <div className="AttributeEditor">
-            <form method="POST" onSubmit={handleSubmit}>
+            <form method="POST" ref={e => form.current = e} onSubmit={handleSubmit}>
 
                 <div className="MainValues">
                     <div className="SideAlign">
                         <div className="CenteredValues">
-                            <label htmlFor="RumNoInput">ID:</label> 
-                            <input id="RumNoInput" type="number" value={attributes.ID} disabled={true}/>                         
+                            <label htmlFor="IDInput">ID:</label> 
+                            <input type="number" id="IDInput" name={'ID'} value={CheckValue(attributes.ID)} disabled={true}/>                          
                         </div>
                         <div className="CenteredValues">
                             <label htmlFor="OwnerInput">Owner:</label>
-                            <input type="text" value={attributes.Current_Owner} disabled={disabled}/>                        
+                            <input type="text" id="OwnerInput" name={'Owner'} defaultValue={CheckValue(attributes.Current_Owner)} disabled={disabled}/>                        
                         </div>                           
                     </div>
                     <div className="SideAlign">
                         <div className="CenteredValues">
                             <label htmlFor="ManufacturerInput">Manufacturer:</label> 
-                            <input id="ManufacturerInput" type="text" value={attributes.Make} disabled={disabled}/>                           
+                            <input type="text" id="ManufacturerInput" name={'Make'} defaultValue={CheckValue(attributes.Make)} disabled={disabled}/>                           
                         </div>
                         <div className="CenteredValues">
                             <label htmlFor="ModelInput">Model:</label>
-                            <input type="text" id="ModelInput" value={attributes.Model} disabled={disabled}/>                            
+                            <input type="text" id="ModelInput" name={'Model'} defaultValue={CheckValue(attributes.Model)} disabled={disabled}/>                            
                         </div>
                     </div>
                 </div>
@@ -120,76 +155,76 @@ const AttributeEditorCarReg = () => {
                     <Route exact path={`${match.url}/vehicle_details`}>
                         <div className="CenteredValues">
                             <label htmlFor="RegNoInput">Reg No:</label>
-                            <input type="text" id="RegNoInput" value={attributes.Reg_No} disabled={disabled}/>                                    
+                            <input type="text" id="RegNoInput" name={'Reg_No'} defaultValue={CheckValue(attributes.Reg_No)} disabled={disabled}/>                                    
                         </div>
                         <div className="SideAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="ManufDateInput">
                                     Manufactured Date: 
                                 </label>
-                                <input type="text" id="ManufDateInput" value={attributes.Manufactured} disabled={disabled}/>                                
+                                <input type="text" id="ManufDateInput" name={'Manufactured'} defaultValue={CheckValue(attributes.Manufactured)} disabled={disabled}/>                                
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="ChassisNoInput">Chassis No:</label>
-                                <input type="text" id="ChassisNoInput" value={attributes.Chassis_No} disabled={disabled}/>                                
+                                <input type="text" id="ChassisNoInput" name={'Chassis_No'} defaultValue={CheckValue(attributes.Chassis_No)} disabled={disabled}/>                                
                             </div>
                         </div>
                         <div className="SideAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="DriveInput">Drive:</label>
-                                <input type="text" id="DriveInput" value={attributes.Drive} disabled={disabled}/>                                
+                                <input type="text" id="DriveInput" name={'Drive'} defaultValue={CheckValue(attributes.Drive)} disabled={disabled}/>                                
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="ColourInput">Colour:</label>
-                                <input type="text" id="ColourInput" value={attributes.Colour} disabled={disabled}/>                                  
+                                <input type="text" id="ColourInput" name={'Colour'} defaultValue={CheckValue(attributes.Colour)} disabled={disabled}/>                                  
                             </div>
                         </div>
                         <div className="SideAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="SeatsInput">Seats:</label>
-                                <input type="number" id="SeatsInput" value={attributes.Seats} disabled={disabled}/>
+                                <input type="number" id="SeatsInput" name={'Seats'} defaultValue={CheckValue(attributes.Seats)} disabled={disabled}/>
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="WheelsInput">Wheels:</label>
-                                <input type="number" id="WheelsInput" value={attributes.Wheels} disabled={disabled}/>
+                                <input type="number" id="WheelsInput" name={'Wheels'} defaultValue={CheckValue(attributes.Wheels)} disabled={disabled}/>
                             </div>
                         </div>
                         <div className="SideAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="MOTInput">MOT:</label>
-                                <input type="date" id="MOTInput" value={checkDate(attributes.MOT)} disabled={disabled}/>                                
+                                <input type="date" id="MOTInput" name={'MOT'} defaultValue={CheckDate(attributes.MOT)} disabled={disabled}/>                                
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="1stRegDVLCInput">1st Reg DVLC:</label>
-                                <input type="date" id="1stRegDVLCInput" value={checkDate(attributes.First_Reg_DVLC)} disabled={disabled}/>                                
+                                <input type="date" id="1stRegDVLCInput" name={'First_Reg_DVLC'} defaultValue={CheckDate(attributes.First_Reg_DVLC)} disabled={disabled}/>                                
                             </div>
                         </div>
                         <div className="SideAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="ConditionInput">Condition:</label>
-                                <input type="text" id="ConditionInput" value={attributes.Condition} disabled={disabled}/>                                      
+                                <input type="text" id="ConditionInput" name={'Condition'} defaultValue={CheckValue(attributes.Condition)} disabled={disabled} size={50}/>                                      
                             </div>
-                        </div>       
+                        </div>
                     </Route>
 
                     <Route exact path={`${match.path}/engine_details`}>
                         <div className="VerticalAlign">
                             <div className="CenteredValues ExtraMargin">
                                 <label htmlFor="MakeInput">Make:</label>
-                                <input type="text" id="MakeInput" value={attributes.Engine_Make} disabled={disabled}/>                                
+                                <input type="text" id="MakeInput" name={'Engine_Make'} defaultValue={CheckValue(attributes.Engine_Make)} disabled={disabled}/>                                
                             </div>
 
                             <div className="CenteredValues ExtraMargin">
                                 <label htmlFor="TypeInput">Type:</label>
-                                <input type="text" id="TypeInput" value={attributes.Engine_Type} disabled={disabled}/>                            
+                                <input type="text" id="TypeInput" name={'Engine_Type'} defaultValue={CheckValue(attributes.Engine_Type)} disabled={disabled}/>                            
                             </div>
                             <div className="CenteredValues ExtraMargin">
                                 <label htmlFor="NumberInput">Number:</label>
-                                <input type="text" id="NumberInput" value={attributes.Engine_No} disabled={disabled}/>                            
+                                <input type="text" id="NumberInput" name={'Engine_No'} defaultValue={CheckValue(attributes.Engine_No)} disabled={disabled}/>                            
                             </div>
                             <div className="CenteredValues ExtraMargin">
                                 <label htmlFor="RatingInput">Rating(cc)</label>                            
-                                <input type="text" id="RatingInput" value={attributes.Engine_Rating} disabled={disabled}/>
+                                <input type="text" id="RatingInput" name={'Engine_Rating'} defaultValue={CheckValue(attributes.Engine_Rating)} disabled={disabled}/>
                             </div>                            
                         </div>
                     </Route>
@@ -198,28 +233,28 @@ const AttributeEditorCarReg = () => {
                         <div className="VerticalAlign">
                             <div className="CenteredValues">
                                 <label htmlFor="RUMRegInput">1st RUM Registered:</label>
-                                <input type="date" id="RUMRegInput" value={checkDate(attributes.First_Reg_RUM)} disabled={disabled}/>                                
+                                <input type="date" id="RUMRegInput" name={'First_Reg_RUM'} defaultValue={CheckDate(attributes.First_Reg_RUM)} disabled={disabled}/>                                
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="OwnerIDInput">Owner ID:</label>
-                                <input type="number" value={attributes.Owner_ID} disabled={disabled}/>                                
+                                <input type="number" id="OwnerIDInput" name={'Owner_ID'} defaultValue={CheckValue(attributes.Owner_ID)} disabled={disabled}/>                                
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="OwnerChangeInput">Owner Change:</label>
-                                <input type="date" id="OwnerChangeInput" value={checkDate(attributes.OwnerChange)} disabled={disabled}/>
+                                <input type="date" id="OwnerChangeInput" name={'Owner_Change'} defaultValue={CheckDate(attributes.Owner_Change)} disabled={disabled} />
                             </div>
                             <div className="CenteredValues">
                                 <label htmlFor="PrevOwnersInput">Previous Owners:</label>
-                                <input type="text" id="PrevOwnersInput" value={attributes.Previous_Owners} disabled={disabled}/>
+                                <input type="text" id="PrevOwnersInput" name={'Previous_Owners'} defaultValue={CheckValue(attributes.Previous_Owners)} disabled={disabled}/>
                             </div>
                             <div className="SideAlign">
                                 <div className="CenteredValues">
                                     <label htmlFor="PhotoInput">Photo(s):</label>
-                                    <input type="checkbox" value={attributes.Photo} disabled={disabled}/>
+                                    <input type="checkbox" id="PhotoInput" name={'Photo'} checked={ConvertBit(attributes.Photo)} disabled={disabled}/>
                                 </div>
                                 <div className="CenteredValues">
                                     <label htmlFor="LastUpdateInput">Last Updated:</label>
-                                    <input type="date" id="LastUpdateInput" value={checkDate(attributes.LastUpdated)} disabled={disabled}/>
+                                    <input type="date" id="LastUpdateInput" name={'Last_Updated'} defaultValue={CheckDate(attributes.Last_Updated)} disabled={true}/>
                                 </div>                                
                             </div>
                         </div>
@@ -228,19 +263,30 @@ const AttributeEditorCarReg = () => {
                     <Route exact path={`${match.path}/history`}>
                         <div className="CenteredValues">
                             <label htmlFor="">History: </label>
-                            <textarea id="HistoryInput" cols={50} rows={25} value={attributes.History} disabled={disabled}/>                                    
+                            <textarea id="HistoryInput" name={'History'} defaultValue={CheckValue(attributes.History)} disabled={disabled} cols={50} rows={25} />                                    
                         </div>
                     </Route>
 
                     <Route exact path={`${match.path}/documentation`}>
                         <div className="CenteredValues">
                             <label htmlFor="DocumentationInput">Documentation:</label>
-                            <textarea name="" id="DocumentationInput" cols={50} rows={25} value={attributes.Documentation} disabled={disabled}/>                                    
+                            <textarea id="DocumentationInput" name={'Documentation'} defaultValue={CheckValue(attributes.Documentation)} disabled={disabled} cols={50} rows={25} />                                    
                         </div>
                     </Route>
 
                     <Route exact path={`${match.path}/images`}>
-                                
+                        <div className="CenteredValues">
+                            {
+                                images
+                                ?
+                                    images.map((imageURL) => {
+
+                                        return ( <img key={imageURL} src={imageURL} alt={`Image-(${imageURL}) From Database.`} />)
+                                    })
+                                :
+                                    <h2>Could Not Parse Images or was null</h2>
+                            }                            
+                        </div>
                     </Route>
                     
                 </div>
@@ -251,19 +297,19 @@ const AttributeEditorCarReg = () => {
                             ?
                                 <>
                                     <div className="CenteredValues">
-                                        <button>Edit</button>                                        
+                                        <a onClick={enableEdit}>Edit</a>                                        
                                     </div>
                                 </>
                             :
                                 <>
                                     <div className="CenteredValues">
-                                        <button type="button">Cancel</button>                                    
+                                        <button type="button" onClick={cancelEdit}>Cancel</button>                                    
                                     </div>
                                     <div className="CenteredValues">
                                         <button type="submit">Submit</button>                                    
                                     </div>
                                     <div className="CenteredValues">
-                                        <button type="reset">Reset</button>                                    
+                                        <a type="reset" onClick={resetEdit} >Reset</a>
                                     </div>
                                 </>
                         }                          

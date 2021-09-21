@@ -1,0 +1,86 @@
+.NewEntry {
+    height: 100%;
+    flex: 0 100%;
+    background-color: #2C3E50;
+
+    color: whitesmoke;
+
+    .SideAlign {
+        display: flex;
+        height: fit-content;
+        flex-direction: row;
+
+        justify-content: center;
+        align-content: center;
+        margin: 0.4rem 0;
+    }
+
+    .CenteredValues {
+        flex: 1 1 100%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+        margin: 0.2rem 1rem;
+
+        &:first-child select {
+            width: 25%;
+        }
+    }
+
+    .VerticalAlign {
+                
+        & > * {
+            margin: 2% 0;
+        }
+    }
+
+    form {
+        width: 75%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+
+        justify-content: center;
+        align-items: center;
+
+        padding: 1% 0;
+    }
+
+    div.line {
+        width: 80%;
+        height: 1%;
+        margin: 2% 0;
+
+        justify-self: center;
+        align-self: center;
+
+        border-bottom: 1px solid lightgray;
+    }
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+        width: 0.6rem;
+        height: 0.6rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+
+    &:hover {
+
+        &::-webkit-scrollbar-thumb {
+            background: gray;
+            border-radius: 5px;
+        }
+    }
+
+}

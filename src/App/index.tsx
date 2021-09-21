@@ -7,6 +7,8 @@ import ListViewer from './Components/ListViewer';
 import Sidebar from './Components/Sidebar';
 import {AttributeEditorCarReg, AttributeEditorOwners} from './Components/AttributeEditor';
 
+import NewEntry from './Components/NewEntry';
+
 const App = () => {
     return (
         <div className="App">
@@ -21,6 +23,9 @@ const App = () => {
                         <ListViewer database='owners'/>
                         <AttributeEditorOwners />
                     </Route>
+                    <Route path='/newentry'>
+                        <NewEntry />
+                    </Route>
                     <Route path='/settings'>
                         
                     </Route>
@@ -29,7 +34,7 @@ const App = () => {
                     </Route>             
                 </Switch>
             </Router>
-        </div>                      
+        </div>                     
     )
 }
 
