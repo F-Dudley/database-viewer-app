@@ -25,6 +25,7 @@ const AttributeEditorOwners = () => {
         
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<IOwner> ) => {
             if(disabled && isMounted) {
+                setDisabled(true);
                 let dataResult = data[0];
                 setAttributes(dataResult);
                 window.api.databaseAPI.send("RequestAttributeCars", {database: 'register_of_cars', attributeID: data[0].ID});
@@ -143,23 +144,26 @@ const AttributeEditorOwners = () => {
                                 <input type="text" id="AddressInput" name={'Address_First'} defaultValue={CheckValue(attributes.Address_First)} disabled={disabled} size={25}/>
                                 <input type="text" id="AddressInput" name={'Address_Second'} defaultValue={CheckValue(attributes.Address_Second)} disabled={disabled} size={25}/>                                                                 
                             </div>
-                            <div className="CenteredValues">
-                                <label htmlFor="TownInput">Town:</label>
-                                <input type="text" id="TownInput" name={'Town'} defaultValue={CheckValue(attributes.Town)} disabled={disabled}/>
+                            <div className="SideAlign">
+                                <div className="CenteredValues">
+                                    <label htmlFor="TownInput">Town:</label>
+                                    <input type="text" id="TownInput" name={'Town'} defaultValue={CheckValue(attributes.Town)} disabled={disabled}/>
+                                </div>
+                                <div className="CenteredValues">
+                                    <label htmlFor="CountyInput">County:</label>
+                                    <input type="text" id="CountyInput" name={'County'} defaultValue={CheckValue(attributes.County)} disabled={disabled}/>
+                                </div>                                
                             </div>
-                            <div className="CenteredValues">
-                                <label htmlFor="CountyInput">County:</label>
-                                <input type="text" id="CountyInput" name={'County'} defaultValue={CheckValue(attributes.County)} disabled={disabled}/>
+                            <div className="SideAlign">
+                                <div className="CenteredValues">
+                                    <label htmlFor="PostCodeInput">Post Code:</label>
+                                    <input type="text" id="PostCodeInput" name={'Post_Code'} defaultValue={CheckValue(attributes.Post_Code)} disabled={disabled}/>
+                                </div>
+                                <div className="CenteredValues">
+                                    <label htmlFor="CountryInput">Country:</label>
+                                    <input type="text" id="CountryInput" name={'Country'} defaultValue={CheckValue(attributes.Country)} disabled={disabled}/>                                
+                                </div>                                
                             </div>
-                            <div className="CenteredValues">
-                                <label htmlFor="PostCodeInput">Post Code:</label>
-                                <input type="text" id="PostCodeInput" name={'Post_Code'} defaultValue={CheckValue(attributes.Post_Code)} disabled={disabled}/>
-                            </div>
-                            <div className="CenteredValues">
-                                <label htmlFor="CountryInput">Country:</label>
-                                <input type="text" id="CountryInput" name={'Country'} defaultValue={CheckValue(attributes.Country)} disabled={disabled}/>                                
-                            </div>
-
                             <div className="CenteredValues">
                                 <label htmlFor="PhoneInput">Telephone:</label>
                                 <input type="text" id="PhoneInput" name={'Telephone'} defaultValue={CheckValue(attributes.Telephone)} disabled={disabled} size={30}/>

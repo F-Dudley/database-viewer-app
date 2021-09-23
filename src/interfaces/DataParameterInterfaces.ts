@@ -39,3 +39,15 @@ export interface DialogOpenRequest {
     filters: any[];
     properties: string[];
 }
+
+export interface IConfig {
+    databaseSettings: ConnectionRequirements;
+}
+
+export interface ConnectionRequirements {
+    host: string,
+    port: string | '3306',
+    user: string,
+    password: string,
+    database: string
+}

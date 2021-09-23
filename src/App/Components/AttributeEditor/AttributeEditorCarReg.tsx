@@ -23,6 +23,7 @@ const AttributeEditorCarReg = () => {
         
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<ICarRegistry> ) => {
             if(disabled && isMounted) {
+                setDisabled(true);
                 let dataResult = data[0];
                 setAttributes(dataResult);           
             }
@@ -303,7 +304,7 @@ const AttributeEditorCarReg = () => {
                             :
                                 <>
                                     <div className="CenteredValues">
-                                        <button type="button" onClick={cancelEdit}>Cancel</button>                                    
+                                        <a onClick={cancelEdit}>Cancel</a>                                    
                                     </div>
                                     <div className="CenteredValues">
                                         <button type="submit">Submit</button>                                    

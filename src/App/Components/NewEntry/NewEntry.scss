@@ -48,6 +48,38 @@
         align-items: center;
 
         padding: 1% 0;
+
+        a {
+            padding: 0.5rem 0.75rem;
+            background-color: #315a83;
+            border-radius: 0.5em;
+
+            margin-bottom: 1rem;
+
+            transition:  color, background-color 0.2s ease-in-out;
+            &:hover {
+                color: black;
+                background-color: lightgray;
+                cursor: pointer;
+            }
+        }
+
+        button {
+            height: 100%;
+            padding: 0.5rem 0.75rem;
+            color: whitesmoke;
+
+            background-color: #315a83;
+            border-style: none;
+            border-radius: 0.5em;
+
+            transition:  color, background-color 0.2s ease-in-out;
+            &:hover {
+                color: black;
+                background-color: lightgray;
+                cursor: pointer;
+            }
+        }
     }
 
     div.line {

@@ -1,6 +1,6 @@
 .AttributeEditor {
     height: 100%;
-    flex: 0 1 43.6%;
+    flex: 1 0 42%;
 
     border-left: 1px solid black;
     background-color: #34495E;
@@ -56,7 +56,7 @@
             border-top: 2px solid black;
             border-bottom: 2px solid black;
             width: 100%;
-            flex: 0 0 75%;
+            flex: 0 1 75%;
 
             &-Buttons {
                 width: 100%;
@@ -141,11 +141,48 @@
 
         .MainButtons {
             width: 100%;
-            flex: 0 0 5%;
+            flex: 0 0 7.2%;
+
+            display: flex;
+            flex-direction: row;
 
             justify-content: center;
             align-items: center;
             overflow: hidden;
+
+            & > * {
+                flex: 1 1 20%;
+            }
+
+            button {
+                height: 100%;
+                padding: 0.5rem 0.75rem;
+                color: whitesmoke;
+
+                background-color: #315a83;
+                border-style: none;
+                border-radius: 0.5em;
+
+                transition:  color, background-color 0.2s ease-in-out;
+                &:hover {
+                    color: black;
+                    background-color: lightgray;
+                    cursor: pointer;
+                }
+            }
+
+            a {
+                padding: 0.5rem 0.75rem;
+                background-color: #315a83;
+                border-radius: 0.5em;
+
+                transition:  color, background-color 0.2s ease-in-out;
+                &:hover {
+                    color: black;
+                    background-color: lightgray;
+                    cursor: pointer;
+                }
+            }
         }
     }
 }

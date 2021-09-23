@@ -22,6 +22,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 let mainWindow: BrowserWindow, serverWindow: BrowserWindow;
+let connection: MySQLConnection, config: ConfigFiles;
 
 const createWindows = (): void => {
 
@@ -102,7 +103,9 @@ const createWindows = (): void => {
     else {
       if(!serverWindow.isDestroyed()){
         serverWindow.close();
-      }      
+      }
+
+      connection.endServerConnection();
     }
 
   });
@@ -111,7 +114,16 @@ const createWindows = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindows);
+app.on('ready', async () => {
+  config = new ConfigFiles(app.getAppPath() + '/Config.json');
+  await config.initializeConfig()
+  .then(() => {
+    connection = new MySQLConnection(config.getServerConfig());
+           
+  });
+
+  createWindows();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -133,11 +145,12 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-//const config = new ConfigFiles();
-const connection = new MySQLConnection();
+ipcMain.on("RequestConfigData", (event) => {
+  event.sender.send("RequestConfigData", config.getConfigData());
+});
 
-ipcMain.on("Ping", () => {
-  console.log("Pong");
+ipcMain.on("SetConfigData", (event, messageData: any) => {
+
 });
 
 ipcMain.on("RequestDialogMessage", (event, messageData: MessageBoxOptions) => {

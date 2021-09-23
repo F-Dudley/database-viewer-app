@@ -1,26 +1,42 @@
-import Store from 'electron-store';
-import { ConnectionRequirements } from './Server';
+import * as fs from 'fs/promises';
+import { constants } from 'fs';
 
-interface IConfig {
-
-    databaseSettings: ConnectionRequirements;
-}
+import { IConfig, ConnectionRequirements } from './interfaces/DataParameterInterfaces';
 
 export default class ConfigFiles {
+    private appDataLocation: string;
+    private configData: IConfig;
 
-    private store: Store;
-
-
-    constructor() {
-        this.store = new Store();
-        if(this.createConfig()) {
-            console.log('\n\n\nCreated Config.')
-        }
+    constructor( _appDataLocation: string) {
+        this.appDataLocation = _appDataLocation;
     }
 
-    public createConfig = (): boolean => {
-        if(this.store.has('databaseConfig')) return false;        
+    public initializeConfig = async () => {
+        let configCheck = await this.checkConfig();
+        if(configCheck) {
+            await this.createConfig();
+        }
 
+        await this.loadConfig();
+    }
+
+    private checkConfig = async (): Promise<boolean> => {
+        let notFound: boolean = false;
+
+        try {
+            await fs.access(this.appDataLocation, constants.R_OK);
+            console.log("\nConfig Found.\n");
+            notFound = false;
+        } 
+        catch (error) {
+            console.log("\nConfig Not Found.\n");
+            notFound = true;
+        }
+
+        return notFound;
+    }
+
+    private createConfig = async () => {
         let defaultConfig: IConfig; 
         defaultConfig = {
             databaseSettings: {
@@ -32,14 +48,36 @@ export default class ConfigFiles {
             }
         };
 
-        this.store.set({defaultConfig});
-        console.log(this.store.path + '\n\n\n');
-    
-        return true;
+        fs.writeFile(this.appDataLocation, JSON.stringify(defaultConfig, null, 4))
+        .then((result) => {
+            if(result == undefined) console.log("\nCreated Config File.\n");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
-    public loadConfig = (configPath: string) => {
+    public loadConfig = async () => {
+        await fs.readFile(this.appDataLocation)
+        .then(data => {
+            this.configData = JSON.parse(data.toString());          
+        });
+    }
+
+    private setConfig = (newConfig: IConfig) => {
         
     }
 
+    public getConfigData = (): IConfig => {
+        return this.configData;
+    }
+
+    public getServerConfig = (): ConnectionRequirements => {
+        return this.configData.databaseSettings;
+    }
+
+    public setServerConfig = (newConfig: ConnectionRequirements): void => {
+
+    }
+ 
 }

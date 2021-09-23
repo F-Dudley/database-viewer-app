@@ -5,46 +5,34 @@ import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest } from './
 import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
-export interface ConnectionRequirements {
-    host: string,
-    port: string | '3306',
-    user: string,
-    password: string,
-    database: string
-}
+import { ConnectionRequirements } from './interfaces/DataParameterInterfaces';
 
 export default class MySQLConnection {
 
     connectionRequirements: ConnectionRequirements;
     connection: any;
 
-    constructor() {
+    constructor(connectionData: ConnectionRequirements) {
+        this.connectionRequirements = connectionData;
         this.startServerConnection();
     }
 
     public startServerConnection(): boolean {
         let mysql = require('mysql');
 
-        this.connection = mysql.createConnection({
-            host: 'localhost',
-            port: '3307',
-            user: 'root',
-            password: 'password',
-            database: 'rum_data'
-        });
+        this.connection = mysql.createConnection(this.connectionRequirements);
         this.connection.connect()
 
         return true;
     }
 
-    private endServerConnection(): void {
-        this.connection.end();
-    }
-
     public async reloadServerConnection() {
         this.endServerConnection();
         this.startServerConnection();
+    }
 
+    public endServerConnection(): void {
+        this.connection.end();
     }
 
     public RequestTableFieldNames(request: QueryRequest): Promise<Array<any> | Error> {

@@ -6,8 +6,9 @@ import './App.scss';
 import ListViewer from './Components/ListViewer';
 import Sidebar from './Components/Sidebar';
 import {AttributeEditorCarReg, AttributeEditorOwners} from './Components/AttributeEditor';
-
 import NewEntry from './Components/NewEntry';
+import SettingsMenu from './Components/SettingsMenu';
+
 
 const App = () => {
     return (
@@ -27,7 +28,7 @@ const App = () => {
                         <NewEntry />
                     </Route>
                     <Route path='/settings'>
-                        
+                        <SettingsMenu />
                     </Route>
                     <Route path='*'>
                         <Redirect to='/cars'/>
