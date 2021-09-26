@@ -3,7 +3,7 @@ import { Route, Switch, NavLink, useRouteMatch, Redirect } from 'react-router-do
 
 import './AttributeEditor.scss';
 import { ICarRegistry } from '../../../interfaces/DatabaseInterfaces';
-import { CheckValue, CheckDate, ConvertBit, ConvertImageBlob } from '../../Utils';
+import { CheckValue, CheckDate, ConvertBit } from '../../Utils';
 
 let tempData: ICarRegistry;
 tempData = {
@@ -24,8 +24,8 @@ const AttributeEditorCarReg = () => {
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<ICarRegistry> ) => {
             if(disabled && isMounted) {
                 setDisabled(true);
-                let dataResult = data[0];
-                setAttributes(dataResult);           
+                setImages([]);
+                setAttributes(data[0]);        
             }
         });          
 
@@ -38,25 +38,22 @@ const AttributeEditorCarReg = () => {
     useEffect(() => {
         form.current.reset();
 
-        const newImages: Array<string> = [];
+        if(attributes.Image !== null || attributes.Image2 !== null) {
+            const newImages: Array<Buffer> = [];
 
-        ConvertImageBlob(attributes.Image)
-        .then(imageURL => {
-            newImages.push(imageURL);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+            if(attributes.Image !== null) newImages.push(attributes.Image);
+            if(attributes.Image2 !== null) newImages.push(attributes.Image2);
 
-        ConvertImageBlob(attributes.Image2)
-        .then(imageURL => {
-            newImages.push(imageURL);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+            window.api.databaseAPI.send("ConvertToNativeImage", newImages);
+            window.api.databaseAPI.receiveOnce("ConvertToNativeImage", (data) => {
+                setImages(data as string[]);
+            });            
+        }
 
-        setImages(newImages); 
+        return (): void => {
+
+        }
+
     }, [attributes])
 
     const enableEdit = () => {

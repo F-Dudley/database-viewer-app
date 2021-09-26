@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, nativeImage } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, nativeImage, NativeImage } from 'electron';
 import isDev from 'electron-is-dev';
 import * as Path from 'path';
 
@@ -170,9 +170,8 @@ ipcMain.on("RequestDialogOpen", (event, messageData: OpenDialogOptions) => {
       if(results.filePaths[i] == undefined) continue;
       else {
         const image = nativeImage.createFromPath(results.filePaths[i]);
-        let bufferData = image.toBitmap();
-
-        ImageData.push(bufferData);        
+        let bufferData = image.toPNG();
+        ImageData.push(bufferData);
       }
     }
 
@@ -182,6 +181,22 @@ ipcMain.on("RequestDialogOpen", (event, messageData: OpenDialogOptions) => {
     console.log(error);
     event.sender.send("RequestDialogOpen", false);
   });
+})
+
+ipcMain.on("ConvertToNativeImage", (event, imageData: Array<Buffer>) => {
+  const imageURLs: string[] = [];
+
+  for (let i = 0; i < imageData.length; i++) {
+    const element = imageData[i];
+    if(element == null) return;
+
+    const image = nativeImage.createFromBuffer(element).resize({width: 1920,height: 1080});
+    const imageURL = image.toDataURL({scaleFactor: 0.1});
+
+    imageURLs.push(imageURL);
+  }
+
+  event.sender.send("ConvertToNativeImage", imageURLs);
 })
 
 ipcMain.on("RequestDataList", async (event, dataParams: QueryRequest) => {
@@ -204,7 +219,7 @@ ipcMain.on("RequestAttributeEdit", async (event, dataParams: AttributeRequest) =
     console.log(error);
     event.sender.send("RequestAttributeEdit", null);
   })
-})
+});
 
 ipcMain.on("RequestAttributeCars", async (event, dataParms: AttributeRequest) => {
   connection.RequestAttributeCars(dataParms)

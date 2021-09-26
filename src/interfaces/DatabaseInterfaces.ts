@@ -63,8 +63,8 @@ export interface ICarRegistry {
     Documentation?: string;
     Photo?: number;
 
-    Image?: Uint8Array;
-    Image2?: Uint8Array;
+    Image?: Buffer;
+    Image2?: Buffer;
 
     Last_Updated?: Date;
     Scraped?: Bit;

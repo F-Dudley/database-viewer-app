@@ -6,6 +6,7 @@ import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
 import { ConnectionRequirements } from './interfaces/DataParameterInterfaces';
+import { NativeImage } from 'electron';
 
 export default class MySQLConnection {
 
@@ -186,13 +187,20 @@ export default class MySQLConnection {
 
         for(const [key, value] of Object.entries(request.data)) {
             parsedKeys.push(key);
-            parsedValues.push(value);
-        }
+            if(key == 'Image' || key == 'Image2') {
+
+                const blob = new Blob([value as Buffer], {type: 'image/png'});
+                parsedValues.push(blob);
+            }
+            else {
+                parsedValues.push(value);                
+            }
+        };
 
         return new Promise( (resolve, reject) => {
             this.connection.query(
-                `INSERT INTO \`${request.database}\` ? VALUES ?;`,
-                [parsedKeys, parsedValues],
+                `INSERT INTO \`${request.database}\` (${parsedKeys}) VALUES (?);`,
+                [parsedValues],
                 (error: any, result: any) => {
                     if(error) {
                         reject(error);

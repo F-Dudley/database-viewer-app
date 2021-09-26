@@ -15,9 +15,9 @@ let SettingsConfig: any;
 
 interface APIRoutes {
     databaseAPI: {
-        send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest) => void,
+        send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest | Array<Buffer>) => void,
         receive: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | null) => void) => void,
-        receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult | Buffer> | null) => void) => void,
+        receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult | Buffer | string> | null) => void) => void,
     }
 
     configAPI: {
@@ -109,6 +109,7 @@ const validDatabaseChannels: string[] = [
     "AppendAttributeEdit",
     "InsertNewData",
     "RequestDialogOpen",
+    "ConvertToNativeImage",
 ];
 
 const validConfigChannels: string[] = [

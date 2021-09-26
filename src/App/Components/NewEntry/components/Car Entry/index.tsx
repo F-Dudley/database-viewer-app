@@ -6,7 +6,6 @@ import { InputField, TextAreaField } from '../InputFields';
 import { ICarRegistry } from '../../../../../interfaces/DatabaseInterfaces';
 
 import './CarEntry.scss';
-import { ConvertImageBlob } from '../../../../Utils';
 
 const CarEntry: FC = () => {
     const [edited, setEdited] = useState<boolean>(false);
@@ -17,21 +16,7 @@ const CarEntry: FC = () => {
         if(imageData === null) return;
         const newImages: Array<string> = [];
 
-        for (let i = 0; i < imageData.length; i++) {
-            const element = imageData[i];
-
-            ConvertImageBlob(element)
-            .then(imageURL => {
-                newImages.push(imageURL);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-            
-        }
-
-        setImages(newImages);
-        console.log(newImages);        
+        setImages(newImages);    
     }, [imageData])
 
     const collectSelectedImageData = () => {
@@ -131,6 +116,7 @@ const CarEntry: FC = () => {
         }
         else {
             window.api.databaseAPI.send("InsertNewData", {database: 'register_of_cars', data: postData});
+            console.log({database: 'register_of_cars', data: postData});
         }
     }
 

@@ -56,7 +56,7 @@ const OwnerEntry = () => {
             window.api.requestDialog("RequestDialogMessage", {title: "No Values Found.", message: "No Data was Found in the Submitted Fields", type: "error"});     
         }
         else {
-            console.log(postData);
+            window.api.databaseAPI.send("InsertNewData", {database: 'owners', data: postData});
         }
     }
 

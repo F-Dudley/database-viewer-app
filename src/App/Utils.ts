@@ -19,20 +19,9 @@ const CheckValue = (value: any) => {
     else return '';
 }
 
-const ConvertImageBlob = (blobArray: Uint8Array): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        if(blobArray == null) {
-            reject(new Error("Blob Data was Null"));           
-        }
-
-        let blob = new Blob([blobArray], { type: "image/png" });
-        resolve(URL.createObjectURL(blob));
-    });
-}
-
 const CheckNULL = (value: any) => {
     if(value) return value;
     else return null;
 }
 
-export { CheckDate, ConvertBit, CheckValue, CheckNULL, ConvertImageBlob }
+export { CheckDate, ConvertBit, CheckValue, CheckNULL }
