@@ -8,7 +8,6 @@ import { CheckValue, CheckDate, ConvertBit } from '../../Utils';
 let tempData: ICarRegistry;
 tempData = {
     ID: 0,
-
 }
 
 const AttributeEditorCarReg = () => {
@@ -27,7 +26,7 @@ const AttributeEditorCarReg = () => {
                 setImages([]);
                 setAttributes(data[0]);        
             }
-        });          
+        });
 
         return (): void => {
             isMounted.current = false;

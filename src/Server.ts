@@ -10,12 +10,16 @@ import { NativeImage } from 'electron';
 
 export default class MySQLConnection {
 
-    connectionRequirements: ConnectionRequirements;
-    connection: any;
+    private connectionRequirements: ConnectionRequirements;
+    private connection: any;
 
     constructor(connectionData: ConnectionRequirements) {
         this.connectionRequirements = connectionData;
         this.startServerConnection();
+    }
+
+    public setConnectionRequiremnts(newConnectionData: ConnectionRequirements): void {
+        this.connectionRequirements = newConnectionData;
     }
 
     public startServerConnection(): boolean {
@@ -30,6 +34,7 @@ export default class MySQLConnection {
     public async reloadServerConnection() {
         this.endServerConnection();
         this.startServerConnection();
+        console.log("\n--- Restarted Server Connection ---\n");
     }
 
     public endServerConnection(): void {

@@ -16,8 +16,8 @@ let SettingsConfig: any;
 interface APIRoutes {
     databaseAPI: {
         send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest | Array<Buffer>) => void,
-        receive: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | null) => void) => void,
-        receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult | Buffer | string> | null) => void) => void,
+        receive: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | any | null) => void) => void,
+        receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult | Buffer | string> | any | null) => void) => void,
     }
 
     configAPI: {
@@ -114,7 +114,7 @@ const validDatabaseChannels: string[] = [
 
 const validConfigChannels: string[] = [
     "RequestConfigData",
-    "SetConfigData"
+    "SetDatabaseConfig",
 ]
 
 const validDialogChannels: string[] = [

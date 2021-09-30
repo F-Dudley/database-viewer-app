@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog, nativeImage, NativeImage } from 'e
 import isDev from 'electron-is-dev';
 import * as Path from 'path';
 
-import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest } from './interfaces/DataParameterInterfaces';
+import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest, ConnectionRequirements, IConfig } from './interfaces/DataParameterInterfaces';
 import MySQLConnection from './Server';
 import ConfigFiles from './Config';
 import { MessageBoxOptions, OpenDialogOptions } from 'electron/main';
@@ -84,7 +84,6 @@ const createWindows = (): void => {
       if(isDev) {
         serverWindow.show();
         serverWindow.webContents.openDevTools();
-        serverWindow.resizable = true;
       }
   });
 
@@ -149,8 +148,9 @@ ipcMain.on("RequestConfigData", (event) => {
   event.sender.send("RequestConfigData", config.getConfigData());
 });
 
-ipcMain.on("SetConfigData", (event, messageData: any) => {
-
+ipcMain.on("SetDatabaseConfig", (event, messageData: ConnectionRequirements) => {
+  config.setServerConfig(messageData);
+  connection.reloadServerConnection();
 });
 
 ipcMain.on("RequestDialogMessage", (event, messageData: MessageBoxOptions) => {
@@ -165,17 +165,20 @@ ipcMain.on("RequestDialogOpen", (event, messageData: OpenDialogOptions) => {
       return;
     }
     const ImageData: Buffer[] = [];
+    const ImageURLs: string[] = [];
 
     for (let i = 0; i < 2; i++) {     
       if(results.filePaths[i] == undefined) continue;
       else {
-        const image = nativeImage.createFromPath(results.filePaths[i]);
-        let bufferData = image.toPNG();
-        ImageData.push(bufferData);
+        const image = nativeImage.createFromPath(results.filePaths[i]).resize({width: 1920, height: 1080});
+        const imageURL = image.toDataURL({scaleFactor: 0.1});
+
+        ImageData.push(image.toPNG());
+        ImageURLs.push(imageURL);
       }
     }
 
-    event.sender.send("RequestDialogOpen", ImageData);
+    event.sender.send("RequestDialogOpen", {buffer: ImageData, src: ImageURLs});
   })
   .catch(error => {
     console.log(error);

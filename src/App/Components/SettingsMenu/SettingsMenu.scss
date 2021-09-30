@@ -14,15 +14,17 @@
 
         & > div.Card {
             display: flex;
-            height: 30%;
-            flex: 1 0 100%;
+            flex: 1 0 100%;            
+            height: fit-content;
 
             justify-content: center;
             align-items: center;
             
             div.Outer {
-                width: 80%;
-                height: 80%;
+                width: 100%;
+                height: 100%;
+                margin: 3rem;
+
                 display: flex;
                 flex-direction: column;
 
@@ -39,23 +41,71 @@
                     margin: 0.75rem 0;
                 }
 
-                div.Inner {
-                    width: 100%;
-                    height: 100%;
+                form.Inner {
+                    width: 80%;
+                    height: 80%;
 
                     display: flex;
                     flex-direction: column;
-                    flex-wrap: wrap;
 
-                    & form > div {
-                        flex: 0 0 25%;
+                    justify-content: center;
+                    align-items: center;
+                    
+                    .SideAlign {
+                        display: flex;
                         height: fit-content;
-                        
-
+                        flex-direction: row;
+                
+                        justify-content: center;
+                        align-content: center;
+                        margin: 0.4rem 0;
+                    }
+                
+                    .CenteredValues {
+                        flex: 1 1 100%;
+                        height: fit-content;
+                        display: flex;
+                        flex-direction: column;
+                
                         justify-content: center;
                         align-items: center;
-                        margin: 0.2rem 0;
+                        margin: 0.2rem 1rem;
+                    }
 
+                    div.MainButtons {
+                        margin: 1rem 0;
+                        
+                        a {
+                            padding: 0.5rem 0.75rem;
+                            background-color: #315a83;
+                            border-radius: 0.5em;
+                
+                            margin-bottom: 1rem;
+                
+                            transition:  color, background-color 0.2s ease-in-out;
+                            &:hover {
+                                color: black;
+                                background-color: lightgray;
+                                cursor: pointer;
+                            }
+                        }
+                
+                        button {
+                            height: 100%;
+                            padding: 0.5rem 0.75rem;
+                            color: whitesmoke;
+                
+                            background-color: #315a83;
+                            border-style: none;
+                            border-radius: 0.5em;
+                
+                            transition:  color, background-color 0.2s ease-in-out;
+                            &:hover {
+                                color: black;
+                                background-color: lightgray;
+                                cursor: pointer;
+                            }
+                        }
                     }
                 }
             }

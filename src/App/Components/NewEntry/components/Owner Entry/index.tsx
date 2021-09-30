@@ -1,7 +1,7 @@
 import React, { FC, SyntheticEvent } from 'react'
 import EntrySection from '../EntrySection/index';
 
-import { InputField, TextAreaField } from '../InputFields/';
+import { InputField, TextAreaField } from '../../../InputFields';
 import { IOwner } from '../../../../../interfaces/DatabaseInterfaces';
 
 const OwnerEntry = () => {

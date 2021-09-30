@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { IOwner, ICarRegistry } from '../../../../../interfaces/DatabaseInterfaces';
+import { IOwner, ICarRegistry } from '../../../interfaces/DatabaseInterfaces';
 
 type TInputType = 'text' | 'number' | 'date' | 'checkbox';
 type TInputName = keyof IOwner | keyof ICarRegistry;

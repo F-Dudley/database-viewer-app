@@ -41,7 +41,7 @@ export interface DialogOpenRequest {
 }
 
 export interface IConfig {
-    databaseSettings: ConnectionRequirements;
+    databaseSettings?: ConnectionRequirements;
 }
 
 export interface ConnectionRequirements {
@@ -49,5 +49,5 @@ export interface ConnectionRequirements {
     port: string | '3306',
     user: string,
     password: string,
-    database: string
+    database?: string
 }

@@ -25,11 +25,9 @@ export default class ConfigFiles {
 
         try {
             await fs.access(this.appDataLocation, constants.R_OK);
-            console.log("\nConfig Found.\n");
             notFound = false;
         } 
         catch (error) {
-            console.log("\nConfig Not Found.\n");
             notFound = true;
         }
 
@@ -48,9 +46,16 @@ export default class ConfigFiles {
             }
         };
 
-        fs.writeFile(this.appDataLocation, JSON.stringify(defaultConfig, null, 4))
+        await this.writeConfig(defaultConfig);
+    }
+
+    private writeConfig = async (newConfig: IConfig) => {
+
+        fs.writeFile(this.appDataLocation, JSON.stringify(newConfig, null, 4))
         .then((result) => {
-            if(result == undefined) console.log("\nCreated Config File.\n");
+            if(result == undefined) {
+                console.log("Writing to Config");
+            };
         })
         .catch((error) => {
             console.log(error);
@@ -64,8 +69,8 @@ export default class ConfigFiles {
         });
     }
 
-    private setConfig = (newConfig: IConfig) => {
-        
+    public setNewConfig = () => {
+       this.writeConfig(this.configData);
     }
 
     public getConfigData = (): IConfig => {
@@ -77,7 +82,8 @@ export default class ConfigFiles {
     }
 
     public setServerConfig = (newConfig: ConnectionRequirements): void => {
-
+        Object.assign(this.configData.databaseSettings, newConfig);
+        this.setNewConfig();
     }
  
 }

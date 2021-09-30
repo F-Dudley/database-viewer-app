@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, SyntheticEvent } from 'react'
 
 import EntrySection from '../EntrySection';
 import LoadableImage from '../../../LoadableImage';
-import { InputField, TextAreaField } from '../InputFields';
+import { InputField, TextAreaField } from '../../../InputFields';
 import { ICarRegistry } from '../../../../../interfaces/DatabaseInterfaces';
 
 import './CarEntry.scss';
@@ -13,10 +13,20 @@ const CarEntry: FC = () => {
     const [imageData, setImageData] = useState<Array<Buffer> | null>(null);
 
     useEffect(() => {
+        /*
         if(imageData === null) return;
-        const newImages: Array<string> = [];
+        let newImages: Array<string>;
 
-        setImages(newImages);    
+        window.api.databaseAPI.send("ConvertToNativeImage", imageData);
+        window.api.databaseAPI.receiveOnce("ConvertToNativeImage", (data) => {
+            console.log(data);
+            if(data != null) {
+                newImages = data as Array<string>;                
+            }
+        });
+
+        setImages(newImages);
+        */
     }, [imageData])
 
     const collectSelectedImageData = () => {
@@ -35,11 +45,14 @@ const CarEntry: FC = () => {
                 'dontAddToRecent',
             ]
         });
-        window.api.databaseAPI.receiveOnce("RequestDialogOpen", (data) => {
-            if(data == null) return;
-            let imageData = data as Array<Buffer>;
+        window.api.databaseAPI.receiveOnce("RequestDialogOpen", (openData) => {
+            if(openData == null) return;
+            console.log(openData);
+            let imageData = openData.buffer as Array<Buffer>;
+            let imageURLs = openData.src as Array<string>;
 
             setImageData(imageData);
+            setImages(imageURLs);
         });
     }
 
@@ -171,9 +184,11 @@ const CarEntry: FC = () => {
                     <EntrySection SectionName="Images Upload (Max 2 Upload)">
                         <a onClick={collectSelectedImageData}>Select Images</a>
                         <div>
-                            <LoadableImage title='Image1' imageSRC={images[0]} imageALT={`Image 1 From Local Storage - (${images[0]})`} />
-                            <div className="line" />
-                            <LoadableImage title='Image2' imageSRC={images[1]} imageALT={`Image 2 From Local Storage - (${images[1]})`} />                   
+                            {
+                                images.map((image, index) => {
+                                    return ( <LoadableImage title={`Image${index}`} imageSRC={image} imageALT={`Image${index} Selected From Local Storage.`}/>)
+                                })    
+                            }                  
                         </div>
                     </EntrySection>
                     <div className="line" />
