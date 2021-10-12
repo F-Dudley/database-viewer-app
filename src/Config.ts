@@ -12,7 +12,7 @@ export default class ConfigFiles {
     }
 
     public initializeConfig = async () => {
-        let configCheck = await this.checkConfig();
+        const configCheck = await this.checkConfig();
         if(configCheck) {
             await this.createConfig();
         }
@@ -21,7 +21,7 @@ export default class ConfigFiles {
     }
 
     private checkConfig = async (): Promise<boolean> => {
-        let notFound: boolean = false;
+        let notFound = false;
 
         try {
             await fs.access(this.appDataLocation, constants.R_OK);
@@ -55,7 +55,7 @@ export default class ConfigFiles {
         .then((result) => {
             if(result == undefined) {
                 console.log("Writing to Config");
-            };
+            }
         })
         .catch((error) => {
             console.log(error);

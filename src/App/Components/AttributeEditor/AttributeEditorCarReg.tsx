@@ -21,7 +21,7 @@ const AttributeEditorCarReg = () => {
     useEffect(() => {
         
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<ICarRegistry> ) => {
-            if(disabled && isMounted) {
+            if(disabled && isMounted.current) {
                 setDisabled(true);
                 setImages([]);
                 setAttributes(data[0]);        
@@ -40,8 +40,8 @@ const AttributeEditorCarReg = () => {
         if(attributes.Image !== null || attributes.Image2 !== null) {
             const newImages: Array<Buffer> = [];
 
-            if(attributes.Image !== null) newImages.push(attributes.Image);
-            if(attributes.Image2 !== null) newImages.push(attributes.Image2);
+            if(attributes.Image !== null) newImages.push(attributes.Image as Buffer);
+            if(attributes.Image2 !== null) newImages.push(attributes.Image2 as Buffer);
 
             window.api.databaseAPI.send("ConvertToNativeImage", newImages);
             window.api.databaseAPI.receiveOnce("ConvertToNativeImage", (data) => {
@@ -70,9 +70,9 @@ const AttributeEditorCarReg = () => {
 
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        let target = event.currentTarget as HTMLFormElement;
+        const target = event.currentTarget as HTMLFormElement;
 
-        let postData: { [key: string]: any } = {};
+        const postData: { [key: string]: any } = {};
 
         for (let i = 0; i < target.length; i++) {
             const element = target[i] as HTMLInputElement;

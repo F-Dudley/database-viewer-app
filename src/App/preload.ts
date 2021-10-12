@@ -27,9 +27,9 @@ interface APIRoutes {
     }
 
     requestDialog: (channel: string, messageData: MessageBoxOptions | OpenDialogOptions) => void,
-};
+}
 
-let apis: APIRoutes = {
+const apis: APIRoutes = {
     databaseAPI: {
         send: (channel, dataRequest) => {
             if(validDatabaseChannels.includes(channel)){

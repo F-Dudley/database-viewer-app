@@ -15,7 +15,6 @@ import QuerySearchResult from '../QuerySearchResult/index';
 const AttributeEditorOwners = () => {
     const isMounted = useRef<boolean>(true);
     const match = useRouteMatch();
-    const navigate = useLocation();
     const [disabled, setDisabled] = useState<boolean>(true);    
     const [attributes, setAttributes] = useState<IOwner>(tempData);
     const [cars, setCars] = useState<Array<ICarRegResult> | null>([]);
@@ -24,9 +23,9 @@ const AttributeEditorOwners = () => {
     useEffect(() => {
         
         window.api.databaseAPI.receive("RequestAttributeEdit", ( data: Array<IOwner> ) => {
-            if(disabled && isMounted) {
+            if(disabled && isMounted.current) {
                 setDisabled(true);
-                let dataResult = data[0];
+                const dataResult = data[0];
                 setAttributes(dataResult);
                 window.api.databaseAPI.send("RequestAttributeCars", {database: 'register_of_cars', attributeID: data[0].ID});
                 window.api.databaseAPI.receiveOnce("RequestAttributeCars", (carData: ICarRegResult[] | null) => {
@@ -61,9 +60,9 @@ const AttributeEditorOwners = () => {
 
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        let target = event.currentTarget as HTMLFormElement;
+        const target = event.currentTarget as HTMLFormElement;
 
-        let postData: { [key: string]: any} = { };
+        const postData: { [key: string]: any} = { };
 
         for (let i = 0; i < target.length; i++) {
             const element = target[i] as HTMLInputElement;

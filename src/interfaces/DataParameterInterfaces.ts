@@ -1,5 +1,6 @@
 
 import { DatabaseType } from './ClientDatabaseInterfaces';
+import { ICarRegistry, IOwner } from './DatabaseInterfaces';
 
 export interface QueryRequest {
     database: DatabaseType,
@@ -20,7 +21,7 @@ export interface UpdateRequest {
 
 export interface InsertRequest {
     database: DatabaseType,
-    data: any,
+    data: ICarRegistry | IOwner,
 }
 
 

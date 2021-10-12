@@ -170,8 +170,8 @@ ipcMain.on("RequestDialogOpen", (event, messageData: OpenDialogOptions) => {
     for (let i = 0; i < 2; i++) {     
       if(results.filePaths[i] == undefined) continue;
       else {
-        const image = nativeImage.createFromPath(results.filePaths[i]).resize({width: 1920, height: 1080});
-        const imageURL = image.toDataURL({scaleFactor: 0.1});
+        const image = nativeImage.createFromPath(results.filePaths[i]).resize({width: 1280});
+        const imageURL = image.toDataURL({scaleFactor: 0.2});
 
         ImageData.push(image.toPNG());
         ImageURLs.push(imageURL);

@@ -28,7 +28,7 @@ const NewEntry: FC = () => {
     const [entryMethod, setEntryMethod] = useState<DifferentEntryMethods>('Car Registry');
 
     const selectOnChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-        let temp = event.currentTarget.value as DifferentEntryMethods;
+        const temp = event.currentTarget.value as DifferentEntryMethods;
         setEntryMethod(temp);
     }
 

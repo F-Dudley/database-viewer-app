@@ -15,7 +15,7 @@ const QuerySearchResult: FC<QuerySearchResultProps> = (props) => {
     }
 
     if(props.database == 'owners') {
-        let results = props.result as IOwnerResult;
+        const results = props.result as IOwnerResult;
         return(
             <div className="QuerySearchResult">
                 <a onClick={onResultClick}>
@@ -45,7 +45,7 @@ const QuerySearchResult: FC<QuerySearchResultProps> = (props) => {
         );
     }
     else {
-        let results = props.result as ICarRegResult;
+        const results = props.result as ICarRegResult;
 
         return(
             <div className="QuerySearchResult">

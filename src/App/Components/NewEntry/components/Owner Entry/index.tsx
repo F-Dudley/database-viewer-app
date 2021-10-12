@@ -8,7 +8,7 @@ const OwnerEntry = () => {
 
     const onSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        let target = event.currentTarget as HTMLFormElement;
+        const target = event.currentTarget as HTMLFormElement;
 
         let attributes: IOwner;
         attributes = {
@@ -29,7 +29,7 @@ const OwnerEntry = () => {
             
         }
 
-        let postData: { [key: string]: any} = { };
+        const postData: { [key: string]: any} = { };
 
         for (let i = 0; i < target.length; i++) {
             const element = target[i] as HTMLInputElement;
@@ -56,7 +56,7 @@ const OwnerEntry = () => {
             window.api.requestDialog("RequestDialogMessage", {title: "No Values Found.", message: "No Data was Found in the Submitted Fields", type: "error"});     
         }
         else {
-            window.api.databaseAPI.send("InsertNewData", {database: 'owners', data: postData});
+            window.api.databaseAPI.send("InsertNewData", {database: 'owners', data: postData as IOwner});
         }
     }
 

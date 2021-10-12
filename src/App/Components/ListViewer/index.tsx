@@ -21,7 +21,7 @@ const ListViewer: FC<ListViewerProps> = (props) => {
 
     useEffect(() => {
 
-        let typingDelay = setTimeout(() => {
+        const typingDelay = setTimeout(() => {
 
             window.api.databaseAPI.send("RequestDataList", 
             {

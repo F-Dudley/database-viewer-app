@@ -12,23 +12,6 @@ const CarEntry: FC = () => {
     const [images, setImages] = useState<Array<string>>([])
     const [imageData, setImageData] = useState<Array<Buffer> | null>(null);
 
-    useEffect(() => {
-        /*
-        if(imageData === null) return;
-        let newImages: Array<string>;
-
-        window.api.databaseAPI.send("ConvertToNativeImage", imageData);
-        window.api.databaseAPI.receiveOnce("ConvertToNativeImage", (data) => {
-            console.log(data);
-            if(data != null) {
-                newImages = data as Array<string>;                
-            }
-        });
-
-        setImages(newImages);
-        */
-    }, [imageData])
-
     const collectSelectedImageData = () => {
         window.api.requestDialog("RequestDialogOpen", 
         {
@@ -48,8 +31,8 @@ const CarEntry: FC = () => {
         window.api.databaseAPI.receiveOnce("RequestDialogOpen", (openData) => {
             if(openData == null) return;
             console.log(openData);
-            let imageData = openData.buffer as Array<Buffer>;
-            let imageURLs = openData.src as Array<string>;
+            const imageData = openData.buffer as Array<Buffer>;
+            const imageURLs = openData.src as Array<string>;
 
             setImageData(imageData);
             setImages(imageURLs);
@@ -58,7 +41,7 @@ const CarEntry: FC = () => {
 
     const onSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        let target = event.currentTarget as HTMLFormElement;
+        const target = event.currentTarget as HTMLFormElement;
 
         let attributes: ICarRegistry;
         attributes = {
@@ -93,7 +76,7 @@ const CarEntry: FC = () => {
             Documentation: null,
         }
 
-        let postData: { [key: string]: any} = { };
+        const postData: { [key: string]: any} = { };
 
         for (let i = 0; i < target.length; i++) {
             const element = target[i] as HTMLInputElement;
@@ -118,17 +101,17 @@ const CarEntry: FC = () => {
         }
 
         if(images[0] != undefined || images[0] != null) {
-            postData['Image'] = imageData[0];
+            postData['Image'] = imageData[0].toString('utf-8');
         }
         if(images[1] != undefined || images[1] != null) {
-            postData['Image2'] = imageData[1];
+            postData['Image2'] = imageData[1].toString('utf-8');
         }
 
         if(Object.keys(postData).length == 1 && !edited) {
             window.api.requestDialog("RequestDialogMessage", {title: "No Values Found.", message: "No Data was Found in the Submitted Fields", type: "error"});     
         }
         else {
-            window.api.databaseAPI.send("InsertNewData", {database: 'register_of_cars', data: postData});
+            window.api.databaseAPI.send("InsertNewData", {database: 'register_of_cars', data: postData as ICarRegistry});
             console.log({database: 'register_of_cars', data: postData});
         }
     }
@@ -186,7 +169,7 @@ const CarEntry: FC = () => {
                         <div>
                             {
                                 images.map((image, index) => {
-                                    return ( <LoadableImage title={`Image${index}`} imageSRC={image} imageALT={`Image${index} Selected From Local Storage.`}/>)
+                                    return ( <LoadableImage key={`Image-${index}`}title={`Image-${index+1}`} imageSRC={image} imageALT={`Image-${index+1} Selected From Local Storage.`}/>)
                                 })    
                             }                  
                         </div>

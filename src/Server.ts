@@ -1,11 +1,11 @@
 import { throws } from 'assert';
 import * as fs from 'fs';
 import { resolve } from 'path/posix';
-import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest } from './interfaces/DataParameterInterfaces';
+import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest , ConnectionRequirements } from './interfaces/DataParameterInterfaces';
 import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
-import { ConnectionRequirements } from './interfaces/DataParameterInterfaces';
+
 import { NativeImage } from 'electron';
 
 export default class MySQLConnection {
@@ -23,7 +23,7 @@ export default class MySQLConnection {
     }
 
     public startServerConnection(): boolean {
-        let mysql = require('mysql');
+        const mysql = require('mysql');
 
         this.connection = mysql.createConnection(this.connectionRequirements);
         this.connection.connect()
@@ -65,7 +65,7 @@ export default class MySQLConnection {
             let columnTypes: string;
             let columnValues: string;
 
-            let escapedUserData = this.connection.escape(`%${request.searchRequest}%`);
+            const escapedUserData = this.connection.escape(`%${request.searchRequest}%`);
             if(request.database == 'register_of_cars') {
                 columnTypes = "`ID`, `Make`, `Model`, `Reg_No`, `Chassis_No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine_Make`, `Engine_Type`, `Engine_No`, `Engine_Rating`, `Current_Owner`, `Current_Owner`, `Condition`, `MOT`";
                 columnValues = `\`ID\` LIKE ${escapedUserData} 
@@ -144,7 +144,7 @@ export default class MySQLConnection {
     }
 
     public RequestAttributeCars(request: AttributeRequest): Promise<Array<ICarRegResult> | null> {
-        let columnTypes = "`ID`, `Make`, `Model`, `Reg_No`, `Chassis_No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine_Make`, `Engine_Type`, `Engine_No`, `Engine_Rating`, `Current_Owner`, `Current_Owner`, `Condition`, `MOT`";
+        const columnTypes = "`ID`, `Make`, `Model`, `Reg_No`, `Chassis_No`, `Manufactured`, `Colour`, `Drive`, `Wheels`, `Seats`, `Engine_Make`, `Engine_Type`, `Engine_No`, `Engine_Rating`, `Current_Owner`, `Current_Owner`, `Condition`, `MOT`";
         return new Promise( (resolve, reject) => {
             this.connection.query(
                 `SELECT ${columnTypes} FROM \`register_of_cars\` WHERE \`Owner_ID\` = ?`,
@@ -192,15 +192,8 @@ export default class MySQLConnection {
 
         for(const [key, value] of Object.entries(request.data)) {
             parsedKeys.push(key);
-            if(key == 'Image' || key == 'Image2') {
-
-                const blob = new Blob([value as Buffer], {type: 'image/png'});
-                parsedValues.push(blob);
-            }
-            else {
-                parsedValues.push(value);                
-            }
-        };
+            parsedValues.push(value);
+        }
 
         return new Promise( (resolve, reject) => {
             this.connection.query(

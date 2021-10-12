@@ -41,7 +41,7 @@ const SettingsMenu: FC = () => {
         event.preventDefault();
 
         const target = event.target as HTMLFormElement;
-        let postData: { [key: string]: any} = { };
+        const postData: { [key: string]: any} = { };
 
         for (let i = 0; i < target.length; i++) {
             const element = target[i] as HTMLInputElement;
