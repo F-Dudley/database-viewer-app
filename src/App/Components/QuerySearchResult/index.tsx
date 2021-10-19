@@ -17,50 +17,43 @@ const QuerySearchResult: FC<QuerySearchResultProps> = (props) => {
     if(props.database == 'owners') {
         const results = props.result as IOwnerResult;
         return(
-            <div className="QuerySearchResult">
-                <a onClick={onResultClick}>
-                    <div className="ResultList">
-                        <label>
-                            {results.ID}
-                        </label>
-                        <div className="vline" />
-                        <label>
-                            {results.Name}  {results.Surname}
-                        </label>
-                        <div className="vline" />
-                        <label>
-                            {results.Organisation}
-                        </label>
-                        <div className="vline" />
-                        <label>
-                            {results.County}
-                        </label>
-                        <div className="vline" />
-                        <label>
-                            {results.Country}
-                        </label>
-                    </div>
-                </a>
-            </div>
+            <tr className="QuerySearchResult" onClick={onResultClick}>
+                <td>
+                    {results.ID}
+                </td>
+                <td>
+                    {results.Name}
+                </td>
+                <td>
+                    {results.Organisation}
+                </td>
+                <td>
+                    {results.County}
+                </td>
+                <td>
+                    {results.Country}
+                </td>
+            </tr>
         );
     }
     else {
         const results = props.result as ICarRegResult;
 
         return(
-            <div className="QuerySearchResult">
-                <a onClick={onResultClick}>
-                    <div className="ResultList">
-                        <label>{results.ID}</label>
-                        <div className="vline" />
-                        <label>{results.Make}</label>
-                        <div className="vline" />
-                        <label>{results.Model}</label>
-                        <div className="vline" />
-                        <label>{results.Seats}</label>
-                    </div>
-                </a>
-            </div>
+            <tr className="QuerySearchResult" onClick={onResultClick}>
+                <td>
+                    {results.ID}
+                </td>
+                <td>
+                    {results.Make}
+                </td>
+                <td>
+                    {results.Model}
+                </td>
+                <td>
+                    {results.Seats}
+                </td>
+            </tr>
         );
     }
 }

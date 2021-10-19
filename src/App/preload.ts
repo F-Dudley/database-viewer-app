@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 
-import { QueryRequest, AttributeRequest, InsertRequest, UpdateRequest, IConfig } from '../interfaces/DataParameterInterfaces';
+import { QueryRequest, AttributeRequest, InsertRequest, UpdateRequest, IConfig, TableRequest } from '../interfaces/DataParameterInterfaces';
 import { ICarRegistry, IOwner} from '../interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from '../interfaces/ClientDatabaseInterfaces';
 import { MessageBoxOptions, OpenDialogOptions } from 'electron/main';
@@ -15,7 +15,7 @@ let SettingsConfig: any;
 
 interface APIRoutes {
     databaseAPI: {
-        send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest | Array<Buffer>) => void,
+        send: (channel: string, data: QueryRequest | AttributeRequest | InsertRequest | UpdateRequest | TableRequest | Array<Buffer>) => void,
         receive: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult> | any | null) => void) => void,
         receiveOnce: (channel: string, func: (data: Array<ICarRegistry| IOwner| ICarRegResult | IOwnerResult | Buffer | string> | any | null) => void) => void,
     }
@@ -104,6 +104,7 @@ const apis: APIRoutes = {
 
 const validDatabaseChannels: string[] = [
     "RequestDataList",
+    "RequestTableFieldNames",
     "RequestAttributeEdit",
     "RequestAttributeCars",
     "AppendAttributeEdit",

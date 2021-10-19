@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog, nativeImage, NativeImage } from 'e
 import isDev from 'electron-is-dev';
 import * as Path from 'path';
 
-import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest, ConnectionRequirements, IConfig } from './interfaces/DataParameterInterfaces';
+import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest, ConnectionRequirements, IConfig, TableRequest } from './interfaces/DataParameterInterfaces';
 import MySQLConnection from './Server';
 import ConfigFiles from './Config';
 import { MessageBoxOptions, OpenDialogOptions } from 'electron/main';
@@ -201,6 +201,23 @@ ipcMain.on("ConvertToNativeImage", (event, imageData: Array<Buffer>) => {
 
   event.sender.send("ConvertToNativeImage", imageURLs);
 })
+
+ipcMain.on("RequestTableFieldNames", async (event, dataParams: TableRequest) => {
+  connection.RequestTableFieldNames(dataParams)
+  .then((results: any[])=> {
+    const cutResults: string[] = [];
+    for (let i = 0; i < results.length; i++) {
+      const element = results[i].Field;
+      cutResults.push(element);
+    }
+
+    event.sender.send("RequestTableFieldNames", cutResults);
+  })
+  .catch(error => {
+    console.log(error);
+    event.sender.send("RequestTableFieldNames", []);
+  })
+});
 
 ipcMain.on("RequestDataList", async (event, dataParams: QueryRequest) => {
   connection.RequestQueryList(dataParams)

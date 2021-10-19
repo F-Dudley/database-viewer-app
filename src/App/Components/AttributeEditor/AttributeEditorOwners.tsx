@@ -187,12 +187,35 @@ const AttributeEditorOwners = () => {
                     <Route exact path={`${match.path}/cars`}>
                         <div className="OwnerCars">
                             <div className="CarResults">
-                                {
-                                    cars.map(car => {
-                                        return ( <QuerySearchResult key={car.ID} database={null} result={car}/> )
-                                    })
-                                }                                
+                                <div className="CarTable">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    ID
+                                                </th>
+                                                <th>
+                                                    Make
+                                                </th>
+                                                <th>
+                                                    Model
+                                                </th>
+                                                <th>
+                                                    Seats
+                                                </th>
+                                            </tr>                                            
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                cars.map(car => {
+                                                    return ( <QuerySearchResult key={car.ID} database={null} result={car}/> )
+                                                })
+                                            }                                               
+                                        </tbody>
+                                    </table>                                      
+                                </div>
                             </div>
+
                         </div>
                     </Route>
                     <Route exact path={`${match.path}/notes`}>
