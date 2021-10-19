@@ -93,6 +93,29 @@
                 }
             }
 
+            .CarPictures {
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                .ImageContainer {
+                    width: 60%;
+                    height: 30%;
+                    border: 1px solid black;
+                    
+                    margin-top: 1%;
+                    padding: 1% 2%;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+
             .OwnerCars {
                 width: 100%;
                 height: 100%;
@@ -102,41 +125,54 @@
                 justify-content: center;
                 align-items: center;
                 
-                .CarResults {
-                    width: 80%;
-                    height: 85%;
+                div.CarResults {
+                    width: 100%;
+                    height: 100%;
 
-                    border-radius: 1%;
-                    background-color: whitesmoke;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
 
-                    & > * {
-                        pointer-events: none;
-                    }
+                    div.CarTable {
+                        width: 80%;
+                        height: 85%;            
+                        background-color: whitesmoke;
 
-                    overflow: auto;
-                    &::-webkit-scrollbar {
-                        width: 0.6rem;
-                        height: 0.6rem;
-                    }
-            
-                    &::-webkit-scrollbar-track {
-                        background: transparent;
-                    }
-                    &::-webkit-scrollbar-thumb {
-                        background: transparent;
-                    }
-            
-                    &:hover {
-            
+                        //border-radius: 5px;
+
+                        overflow-y: auto;
+                        &::-webkit-scrollbar {
+                            width: 0.6rem;
+                            height: 0.6rem;
+                        }
+                
+                        &::-webkit-scrollbar-track {
+                            background: transparent;
+                        }
                         &::-webkit-scrollbar-thumb {
                             background: gray;
                             border-radius: 5px;
                         }
+
+                        table {
+                            width: 100%;
+
+                            border-collapse: separate;
+                            pointer-events: none;
+
+                            th {
+                                position: sticky;
+                                top: 0;
+                                background-color: #315a83;
+                            }
+
+                            td {
+                                height: 10%;
+                            }
+                        }                        
                     }
                 }
             }
-
-            overflow: hidden;
         }
 
         .MainButtons {
