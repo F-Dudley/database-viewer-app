@@ -17,7 +17,7 @@ const ListViewer: FC<ListViewerProps> = (props) => {
 
     useEffect(() => {
         setSearch("");
-    }, []);        
+    }, []);
 
     useEffect(() => {
 
@@ -37,16 +37,12 @@ const ListViewer: FC<ListViewerProps> = (props) => {
         return () => clearTimeout(typingDelay)
     }, [search, props.database]);
 
-    const searchField = () => {
-        setSearch(search);
-    }
-
     return (
         <div className="ListViewer">
             <div className="Searchbar">
 
                 <div className="Searchbar-SearchContainer">
-                    <input type="text" autoComplete='off' placeholder="Search Here" name="search"  onChange={e => setSearch(e.target.value)} />
+                    <input type="text" autoComplete='off' placeholder="Search Here" name="search"  value={search} onChange={e => setSearch(e.target.value)} />
                     <button type="submit" >Search</button>
                 </div>
 
