@@ -13,13 +13,21 @@ interface ListViewerProps {
 const ListViewer: FC<ListViewerProps> = (props) => {
 
     const [search, setSearch] = useState<string>("");
+    const [database, setDatabase] = useState<boolean>(true);
     const [searchResults, setSearchResults] = useState<Array<ICarRegResult | IOwnerResult>>([]);
 
     useEffect(() => {
-        setSearch("");
+
     }, []);        
 
     useEffect(() => {
+
+        if(props.database == 'register_of_cars') {
+            setDatabase(true);
+        }
+        else {
+            setDatabase(false);
+        }
 
         const typingDelay = setTimeout(() => {
 
@@ -37,10 +45,6 @@ const ListViewer: FC<ListViewerProps> = (props) => {
         return () => clearTimeout(typingDelay)
     }, [search, props.database]);
 
-    const searchField = () => {
-        setSearch(search);
-    }
-
     return (
         <div className="ListViewer">
             <div className="Searchbar">
@@ -52,11 +56,55 @@ const ListViewer: FC<ListViewerProps> = (props) => {
 
             </div>
             <div className="SearchResults">
-                {
-                    searchResults.map((searchResult) => {
-                        return ( <QuerySearchResult key={searchResult.ID} database={props.database} result={searchResult}/> );
-                    })
-                }                
+                <table>
+                    <thead>
+                        <tr>
+                            {
+                                database
+                                ?
+                                    <>
+                                        <th>
+                                            ID
+                                        </th>
+                                        <th>
+                                            Make
+                                        </th>
+                                        <th>
+                                            Model
+                                        </th>
+                                        <th>
+                                            Seats
+                                        </th>
+                                    </>
+                                :
+                                    <>
+                                        <th>
+                                            ID
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Organisation
+                                        </th>
+                                        <th>
+                                            County
+                                        </th>
+                                        <th>
+                                            Country
+                                        </th>
+                                    </>
+                            }
+                        </tr>                        
+                    </thead>
+                    <tbody>
+                        {
+                            searchResults.map((searchResult) => {
+                                return ( <QuerySearchResult key={searchResult.ID} database={props.database} result={searchResult}/> );
+                            })
+                        }                        
+                    </tbody>
+                </table>             
             </div>
         </div>
     )

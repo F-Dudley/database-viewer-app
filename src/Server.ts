@@ -1,7 +1,7 @@
 import { throws } from 'assert';
 import * as fs from 'fs';
 import { resolve } from 'path/posix';
-import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest , ConnectionRequirements } from './interfaces/DataParameterInterfaces';
+import { QueryRequest, InsertRequest, UpdateRequest, AttributeRequest, ConnectionRequirements, TableRequest } from './interfaces/DataParameterInterfaces';
 import { IOwner, ICarRegistry } from './interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from './interfaces/ClientDatabaseInterfaces';
 
@@ -41,7 +41,7 @@ export default class MySQLConnection {
         this.connection.end();
     }
 
-    public RequestTableFieldNames(request: QueryRequest): Promise<Array<any> | Error> {
+    public RequestTableFieldNames(request: TableRequest): Promise<Array<any> | Error> {
         return new Promise( (resolve, reject) => {
             this.connection.query(
                 `SHOW COLUMNS FROM ${request.database}`, 

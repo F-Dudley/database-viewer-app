@@ -2,6 +2,10 @@
 import { DatabaseType } from './ClientDatabaseInterfaces';
 import { ICarRegistry, IOwner } from './DatabaseInterfaces';
 
+export interface TableRequest {
+    database: DatabaseType,
+}
+
 export interface QueryRequest {
     database: DatabaseType,
     searchRequest: string,
