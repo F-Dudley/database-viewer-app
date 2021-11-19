@@ -47,7 +47,7 @@ const createWindows = (): void => {
     },
 
     title: "RUM Viewer Application | Main Window",
-    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
+    icon: Path.resolve(__dirname, "/icons/database_icon-64px.ico"),
   });
 
   serverWindow = new BrowserWindow({
@@ -59,6 +59,8 @@ const createWindows = (): void => {
     fullscreen: false,
     fullscreenable: false,
     resizable: false,
+    frame: false,
+    autoHideMenuBar: true,
 
     webPreferences: {
       allowRunningInsecureContent: false,    
@@ -68,7 +70,7 @@ const createWindows = (): void => {
     },
 
     title: "RUM Viewer Application | Server Window",
-    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
+    icon: Path.resolve(__dirname, "/icons/database_icon-64px.ico"),
   });
 
   // Load Webpacked Version of App.

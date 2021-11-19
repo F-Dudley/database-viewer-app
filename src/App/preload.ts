@@ -4,7 +4,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 import { QueryRequest, AttributeRequest, InsertRequest, UpdateRequest, IConfig, TableRequest } from '../interfaces/DataParameterInterfaces';
 import { ICarRegistry, IOwner} from '../interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from '../interfaces/ClientDatabaseInterfaces';
-import { MessageBoxOptions, OpenDialogOptions } from 'electron/main';
+import { MessageBoxOptions, OpenDialogOptions } from 'electron';
 
 declare global {
     interface Window {api: APIRoutes,}
