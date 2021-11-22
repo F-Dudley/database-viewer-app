@@ -38,6 +38,8 @@ const createWindows = (): void => {
     fullscreen: false,
     fullscreenable: false,
     resizable: false,
+    frame: false,
+    autoHideMenuBar: true,
 
     webPreferences: {
       allowRunningInsecureContent: false,   
@@ -47,7 +49,7 @@ const createWindows = (): void => {
     },
 
     title: "RUM Viewer Application | Main Window",
-    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
+    icon: Path.resolve(__dirname, "/icons/database_icon-64px.ico"),
   });
 
   serverWindow = new BrowserWindow({
@@ -59,6 +61,8 @@ const createWindows = (): void => {
     fullscreen: false,
     fullscreenable: false,
     resizable: false,
+    frame: false,
+    autoHideMenuBar: true,
 
     webPreferences: {
       allowRunningInsecureContent: false,    
@@ -68,7 +72,7 @@ const createWindows = (): void => {
     },
 
     title: "RUM Viewer Application | Server Window",
-    icon: Path.resolve(app.getAppPath(), 'icons/database_icon-64px.ico'),
+    icon: Path.resolve(__dirname, "/icons/database_icon-64px.ico"),
   });
 
   // Load Webpacked Version of App.
@@ -110,15 +114,11 @@ const createWindows = (): void => {
   });
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   config = new ConfigFiles(app.getAppPath() + '/Config.json');
   await config.initializeConfig()
   .then(() => {
     connection = new MySQLConnection(config.getServerConfig());
-           
   });
 
   createWindows();
@@ -141,9 +141,35 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// Window Based Events
+ipcMain.on("MainWindow-Quit", (event) => {
+  if (mainWindow.isClosable)
+  {
+    mainWindow.close();    
+  }
+});
 
+ipcMain.on("MainWindow-Minimise", (event) => {
+  if (mainWindow.isMinimizable)
+  {
+    mainWindow.minimize();
+  }
+});
+
+ipcMain.on("ServerWindow-Quit", (event) => {
+  if (serverWindow.isClosable) {
+    serverWindow.close;
+  }
+});
+
+ipcMain.on("ServerWindow-Minimise", (event) => {
+  if (serverWindow.isMinimizable)
+  {
+    serverWindow.minimize();    
+  }
+});
+
+// Database Events
 ipcMain.on("RequestConfigData", (event) => {
   event.sender.send("RequestConfigData", config.getConfigData());
 });
