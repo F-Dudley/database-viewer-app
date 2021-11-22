@@ -4,7 +4,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 import { QueryRequest, AttributeRequest, InsertRequest, UpdateRequest, IConfig, TableRequest } from '../interfaces/DataParameterInterfaces';
 import { ICarRegistry, IOwner} from '../interfaces/DatabaseInterfaces';
 import { ICarRegResult, IOwnerResult } from '../interfaces/ClientDatabaseInterfaces';
-import { MessageBoxOptions, OpenDialogOptions } from 'electron/main';
+import { MessageBoxOptions, OpenDialogOptions } from 'electron';
+import { channel } from 'diagnostics_channel';
 
 declare global {
     interface Window {api: APIRoutes,}
@@ -23,6 +24,12 @@ interface APIRoutes {
     configAPI: {
         send: (channel: string, data?: any) => void,
         receive: (channel: string, func: (data: IConfig) => void) => void,
+        receiveOnce: (channel: string, func: (data: any) => void) => void
+    }
+
+    windowFuncs: {
+        send: (channel: string) => void,
+        receive: (channel: string,  func: (data: any) => void) => void,
         receiveOnce: (channel: string, func: (data: any) => void) => void
     }
 
@@ -99,7 +106,32 @@ const apis: APIRoutes = {
             ipcRenderer.send(channel, messageData);            
         }
         else console.log("Recieved Data From Invalid Channel.");
-    } 
+    },
+
+    windowFuncs: {
+        send: (channel) => {
+            if (validWindowFuncs.includes(channel)) {
+                ipcRenderer.send(channel);
+            }
+            else console.log("Received Message for Invalid Channel.");
+        },
+
+        receive: (channel, callback) => {
+            if (validWindowFuncs.includes(channel)) {
+                const strippedCallback = (_: null,  data: any) => callback(data);
+                ipcRenderer.on(channel, strippedCallback);
+            }
+            else console.log("Recieved Data For Invalid Channel.");
+        },
+
+        receiveOnce: (channel, callback) => {
+            if (validWindowFuncs.includes(channel)) {
+                const strippedCallback = (_: null, data: any) => callback(data);
+                ipcRenderer.once(channel, strippedCallback);
+            }
+            else console.log("Recieved Data For Invalid Channel.");
+        }
+    }
 };
 
 const validDatabaseChannels: string[] = [
@@ -121,6 +153,11 @@ const validConfigChannels: string[] = [
 const validDialogChannels: string[] = [
     "RequestDialogMessage",
     "RequestDialogOpen",
+]
+
+const validWindowFuncs: string[] = [
+    "MainWindow-Quit",
+    "MainWindow-Minimise"
 ]
 
 contextBridge.exposeInMainWorld("api", apis);

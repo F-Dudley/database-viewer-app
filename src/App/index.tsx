@@ -8,34 +8,38 @@ import Sidebar from './Components/Sidebar';
 import {AttributeEditorCarReg, AttributeEditorOwners} from './Components/AttributeEditor';
 import NewEntry from './Components/NewEntry';
 import SettingsMenu from './Components/SettingsMenu';
-
+import WindowScaler from '../WindowComponents/WindowScaler';
+import WindowBar from '../WindowComponents/WindowBar';
 
 const App = () => {
     return (
-        <div className="App">
-            <Router>            
-                <Sidebar />
-                <Switch>
-                    <Route path='/cars'>
-                        <ListViewer database='register_of_cars' />
-                        <AttributeEditorCarReg />                    
-                    </Route>
-                    <Route path='/owners'>
-                        <ListViewer database='owners'/>
-                        <AttributeEditorOwners />
-                    </Route>
-                    <Route path='/newentry'>
-                        <NewEntry />
-                    </Route>
-                    <Route path='/settings'>
-                        <SettingsMenu />
-                    </Route>
-                    <Route path='*'>
-                        <Redirect to='/cars'/>
-                    </Route>             
-                </Switch>
-            </Router>
-        </div>                     
+        <WindowScaler>
+            <WindowBar windowName={"MainWindow"} />
+            <div className="App">
+                <Router>            
+                    <Sidebar />
+                    <Switch>
+                        <Route path='/cars'>
+                            <ListViewer database='register_of_cars' />
+                            <AttributeEditorCarReg />                    
+                        </Route>
+                        <Route path='/owners'>
+                            <ListViewer database='owners'/>
+                            <AttributeEditorOwners />
+                        </Route>
+                        <Route path='/newentry'>
+                            <NewEntry />
+                        </Route>
+                        <Route path='/settings'>
+                            <SettingsMenu />
+                        </Route>
+                        <Route path='*'>
+                            <Redirect to='/cars'/>
+                        </Route>             
+                    </Switch>
+                </Router>
+            </div>            
+        </WindowScaler>      
     )
 }
 
