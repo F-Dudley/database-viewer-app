@@ -1,10 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-declare global {
-    interface Window {api: APIRoutes,}
-}
-
-window.api = window.api;
 
 interface APIRoutes {
     databaseAPI: {
@@ -12,12 +7,18 @@ interface APIRoutes {
         receive: (channel: string, func: (data: any) => void) => void,
         receiveOnce: (channel: string, func: (data: any) => void) => void,
     }
+
+    windowFuncs: {
+        send: (channel: string) => void,
+        receive: (channel: string,  func: (data: any) => void) => void,
+        receiveOnce: (channel: string, func: (data: any) => void) => void
+    }
 }
 
 const apis: APIRoutes = {
     databaseAPI: {
         send: (channel, dataRequest) => {
-            if(validChannels.includes(channel)){
+            if(validDatabaseChannels.includes(channel)){
                 ipcRenderer.send(channel, dataRequest);
             }
             else {
@@ -27,7 +28,7 @@ const apis: APIRoutes = {
         },
 
         receive: (channel, callback) => {
-            if (validChannels.includes(channel)) {
+            if (validDatabaseChannels.includes(channel)) {
                 const newCallback = (_: null, data: any[]) => callback(data);
                 ipcRenderer.on(channel, newCallback);
             }
@@ -37,7 +38,7 @@ const apis: APIRoutes = {
         },
 
         receiveOnce: (channel, callback) => {
-            if (validChannels.includes(channel)) {
+            if (validDatabaseChannels.includes(channel)) {
                 const newCallback = (_: null, data: any[]) => callback(data);
                 ipcRenderer.once(channel, newCallback);
             }
@@ -46,10 +47,40 @@ const apis: APIRoutes = {
             }
         },
     },
+
+    windowFuncs: {
+        send: (channel) => {
+            if (validWindowFuncs.includes(channel)) {
+                ipcRenderer.send(channel);
+            }
+            else console.log("Received Message for Invalid Channel.");
+        },
+
+        receive: (channel, callback) => {
+            if (validWindowFuncs.includes(channel)) {
+                const strippedCallback = (_: null,  data: any) => callback(data);
+                ipcRenderer.on(channel, strippedCallback);
+            }
+            else console.log("Recieved Data For Invalid Channel.");
+        },
+
+        receiveOnce: (channel, callback) => {
+            if (validWindowFuncs.includes(channel)) {
+                const strippedCallback = (_: null, data: any) => callback(data);
+                ipcRenderer.once(channel, strippedCallback);
+            }
+            else console.log("Recieved Data For Invalid Channel.");
+        }
+    }
 };
 
-const validChannels: string[] = [
+const validDatabaseChannels: string[] = [
+    "RecieveServerCalls",
+]
 
-];
+const validWindowFuncs: string[] = [
+    "ServerWindow-Quit",
+    "ServerWindow-Minimise"
+]
 
 contextBridge.exposeInMainWorld("api", apis);

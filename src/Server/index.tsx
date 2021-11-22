@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
 
-import WindowScaler from './Components/WindowScaler';
-import WindowBar from './Components/WindowBar';
+import WindowScaler from '../WindowComponents/WindowScaler';
+import WindowBar from '../WindowComponents/WindowBar';
 import MessageContainer from './Components/MessageContainer';
 
 interface ServerProps {
@@ -12,7 +12,7 @@ interface ServerProps {
 const ServerApplication: FC<ServerProps> = () => {
     return (
         <WindowScaler>
-            <WindowBar />
+            <WindowBar windowName={"ServerWindow"} />
             <MessageContainer />
         </WindowScaler>
     )

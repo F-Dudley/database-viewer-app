@@ -1,26 +1,29 @@
 import React, { FC } from 'react'
-import { ipcRenderer } from 'electron/renderer';
 
 import './WindowBar.scss';
 
-const WindowBar: FC = () => {
+interface WindowBarProps {
+    windowName: string
+}
+
+const WindowBar: FC<WindowBarProps> = (props) => {
 
     const MinimiseClicked = () => {
-        ipcRenderer.send("ServerWindow-Minimise");
+        window.api.windowFuncs.send(`${props.windowName}-Minimise`);
     }
 
     const QuitClicked = () => {
-        ipcRenderer.send("ServerWindow-Quit")
+        window.api.windowFuncs.send(`${props.windowName}-Quit`)
     }
 
     return (
         <div className="WindowBar">
             <ul className="WindowBar_Buttons">
                 <li className="right">
-                    <a onClick={MinimiseClicked}>X</a>
+                    <a onClick={QuitClicked}>X</a>
                 </li>                
                 <li className="right">
-                    <a onClick={QuitClicked}>=</a>
+                    <a onClick={MinimiseClicked}>=</a>
                 </li>
             </ul>
         </div>
