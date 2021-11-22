@@ -1,24 +1,31 @@
-import React, { FC } from 'react';
+import React, { Component, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Route } from 'react-router-dom';
 
-import WindowScaler from '../WindowComponents/WindowScaler';
-import WindowBar from '../WindowComponents/WindowBar';
-import MessageContainer from './Components/MessageContainer';
+import './Server.scss';
 
-interface ServerProps {
+    interface ServerApplicationProps {
 
+    }
+
+    interface RequestFormat {
+
+    }
+
+export default class ServerApplication extends Component {
+
+    public constructor(props: ServerApplicationProps) {
+        super(props);
+    }
+
+    public render(): JSX.Element {
+        return (
+            <div>
+                <h1>This is The Server Window.</h1>
+            </div>
+        )
+    }
 }
-
-const ServerApplication: FC<ServerProps> = () => {
-    return (
-        <WindowScaler>
-            <WindowBar windowName={"ServerWindow"} />
-            <MessageContainer />
-        </WindowScaler>
-    )
-}
-
-export default ServerApplication;
 
 ReactDOM.render(
     <React.StrictMode>
