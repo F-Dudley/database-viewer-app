@@ -32,12 +32,9 @@ const createWindows = (): void => {
     height: 720,
     show: false,
 
-    minWidth: 800,
-    minHeight: 600,
+    minWidth: 1024,
+    minHeight: 576,
 
-    fullscreen: false,
-    fullscreenable: false,
-    resizable: false,
     frame: false,
     autoHideMenuBar: true,
 
@@ -56,11 +53,13 @@ const createWindows = (): void => {
 
     width: 500,
     height: 720,
+
+    minWidth: 400,
+    minHeight: 576,
     show: false,
 
     fullscreen: false,
     fullscreenable: false,
-    resizable: false,
     frame: false,
     autoHideMenuBar: true,
 

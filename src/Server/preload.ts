@@ -1,10 +1,12 @@
+import { ServerCall } from "../interfaces/ClientDatabaseInterfaces";
+
 const { contextBridge, ipcRenderer } = require('electron');
 
 
 interface APIRoutes {
     databaseAPI: {
         send: (channel: string, data: any) => void,
-        receive: (channel: string, func: (data: any) => void) => void,
+        receive: (channel: string, func: (data: ServerCall) => void) => void,
         receiveOnce: (channel: string, func: (data: any) => void) => void,
     }
 
@@ -29,7 +31,7 @@ const apis: APIRoutes = {
 
         receive: (channel, callback) => {
             if (validDatabaseChannels.includes(channel)) {
-                const newCallback = (_: null, data: any[]) => callback(data);
+                const newCallback = (_: null, data: ServerCall) => callback(data);
                 ipcRenderer.on(channel, newCallback);
             }
             else {
@@ -75,7 +77,7 @@ const apis: APIRoutes = {
 };
 
 const validDatabaseChannels: string[] = [
-    "RecieveServerCalls",
+    "ReceiveServerCalls",
 ]
 
 const validWindowFuncs: string[] = [

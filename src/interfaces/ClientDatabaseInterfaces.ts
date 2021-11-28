@@ -37,3 +37,10 @@ export interface IOwnerResult {
     Country: string;
     Email: string;
 }
+
+export interface ServerCall
+{
+
+    message: string;
+    errorOccured: boolean;
+}

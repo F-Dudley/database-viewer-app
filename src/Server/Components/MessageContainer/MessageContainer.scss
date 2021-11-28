@@ -1,15 +1,48 @@
-.MessageContainer {
+.MainContainer {
     flex: 1 1 96%;
+
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 
     background-color: #34495E;
 
-    .Container {
-        width: 97%;
-        height: 97%;
 
-        overflow-y: auto;
+    .MessageContainer {
+        width: 100%;
+        height: 85%;
+
+        &_Inner {
+            width: 95%;
+            height: 95%;
+
+            border-radius: 5px;
+            overflow-y: auto;
+
+            background-color: yellow;
+        }
+    }
+
+    .UtilButtons {
+        width: 100%;
+        height: 15%;
+
+        &_Inner {
+            width: 95%;
+            height: 90%;
+
+            display: flex;
+            flex-direction: row;
+            border-radius: 5px;
+
+            overflow-y: hidden;
+            overflow-x: auto;
+            scroll-snap-type: x proximity;
+        }
+    }
+
+    .CenterContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
