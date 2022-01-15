@@ -30,16 +30,31 @@ const MessageContainer: FC<MessageContainerProps> = (props) => {
     return (
         <div className="MainContainer">
             <div className="MessageContainer CenterContainer">
-                <div className="MessageContainer_Inner">
-                    <ServerCallMessage />
-                    {
-                        currentCallLog.map((callMessage) => {
-                            return (
-                                <ServerCallMessage />
-                            )
-                        })
-                    }
-                </div>
+                <table className="MessageContainer_Inner">
+                    <thead>
+                        <tr>
+                            <th>
+                                Response:
+                            </th>
+                            <th>
+                                Database:
+                            </th>
+                            <th>
+                                Notes:
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ServerCallMessage responseMessage={200} databaseRequest='owners' />
+                        {
+                            currentCallLog.map((callMessage) => {
+                                return (
+                                    <ServerCallMessage responseMessage={200} databaseRequest='owners'/>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
             </div>
             <div className="UtilButtons CenterContainer">
                 <div className="UtilButtons_Inner">
